@@ -1,0 +1,10 @@
+
+# Define variables
+DIR=/home/hltcoe/lschwartz/GALE/experiments/2009-10-28
+PREPROCESS=${DIR}/scripts/preprocess.pl
+P4=/home/hltcoe/ccallison/GALE/P4
+P4_DEV_SRC=${P4}/dev+devtest/ready-for-mt-atb-v3
+P4_DEV_TGT=${P4}/dev+devtest/ref/ibm-tok
+REMOVE_W=${DIR}/scripts/reprocess_remove-W.pl
+P4_TUNING_SRC=/home/hltcoe/lschwartz/GALE/experiments/2009-10-28/tuning/ar
+P4_TUNING_TGT=/home/hltcoe/lschwartz/GALE/experiments/2009-10-28/tuning/en
