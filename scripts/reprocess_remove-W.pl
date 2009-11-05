@@ -10,7 +10,7 @@ use warnings;
 use 5.008;           # Required for the next line, just to be safe
 use encoding "utf8"; # N.B. ''use utf8'' does not work to enable utf8 regexes
 
-use lib "/Users/lane/Research/GALE/scripts";
+use lib "/home/hltcoe/lschwartz/GALE/experiments/2009-10-28/scripts";
 use ParallelReprocess;
 
 ParallelReprocess::setExtentionDefaults();
