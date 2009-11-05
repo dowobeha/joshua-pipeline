@@ -25,4 +25,7 @@ rm ${DIR}/data/tuning/mt03-mt06.nw.noW.fakeEN && \
 rm ${DIR}/data/tuning/mt03-mt06.nw.noW.fakeALN && \
 #
 log "Removing sentence-initial W- COMPLETE" && \
-exit 0
+exit 0 || \
+#
+exit -1
+

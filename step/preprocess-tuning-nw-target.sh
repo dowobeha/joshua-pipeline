@@ -16,4 +16,7 @@ cat ${P4_TUNING_TGT}/mt0[3456].nw.en.2 > ${DIR}/data/tuning/mt03-mt06.nw.en.2 &&
 cat ${P4_TUNING_TGT}/mt0[3456].nw.en.3 > ${DIR}/data/tuning/mt03-mt06.nw.en.3 && \
 #
 log "Preprocess tuning target data COMPLETE" && \
-exit 0
+exit 0 || \
+#
+exit -1
+

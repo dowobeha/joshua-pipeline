@@ -18,5 +18,8 @@ cat ${DIR}/data/tuning/mt0[3456].wb.ar > ${DIR}/data/tuning/mt03-mt06.wb.ar && \
 wc -l ${DIR}/data/tuning/mt0[3456].wb.ar && \
 wc -l ${DIR}/data/tuning/mt03-mt06.wb.ar && \
 #
-log "Preprocess tuning source data COMPLETE"
-exit 0
+log "Preprocess tuning source data COMPLETE" && \
+exit 0 || \
+#
+exit -1
+

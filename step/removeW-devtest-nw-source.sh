@@ -13,26 +13,19 @@ log "Creating dummy target and dummy alignment files" && \
 ruby -e "STDIN.each_line{|line| puts}" < ${DIR}/data/devtest/mt08.nw.ar > ${DIR}/data/devtest/mt08.nw.fakeEN && \
 ruby -e "STDIN.each_line{|line| puts}" < ${DIR}/data/devtest/mt08.nw.ar > ${DIR}/data/devtest/mt08.nw.fakeALN && \
 #
-ruby -e "STDIN.each_line{|line| puts}" < ${DIR}/data/devtest/mt08.wb.ar > ${DIR}/data/devtest/mt08.wb.fakeEN && \
-ruby -e "STDIN.each_line{|line| puts}" < ${DIR}/data/devtest/mt08.wb.ar > ${DIR}/data/devtest/mt08.wb.fakeALN && \
-#
 # Remove W from merged devtest source file 
 log "Removing sentence-initial W- from ${DIR}/data/devtest/mt08.nw.ar" && \
 ${REMOVE_W} --ar .ar --en .fakeEN --align .fakeALN --pp .noW ${DIR}/data/devtest/mt08.nw && \
-#
-log "Removing sentence-initial W- from ${DIR}/data/devtest/mt08.wb.ar" && \
-${REMOVE_W} --ar .ar --en .fakeEN --align .fakeALN --pp .noW ${DIR}/data/devtest/mt08.wb && \
 #
 # Removing temporary dummy files
 log "Removing temporary dummy files" && \
 rm ${DIR}/data/devtest/mt08.nw.fakeEN && \
 rm ${DIR}/data/devtest/mt08.nw.fakeALN && \
-rm ${DIR}/data/devtest/mt08.wb.fakeEN && \
-rm ${DIR}/data/devtest/mt08.wb.fakeALN && \
 rm ${DIR}/data/devtest/mt08.nw.noW.fakeEN && \
 rm ${DIR}/data/devtest/mt08.nw.noW.fakeALN && \
-rm ${DIR}/data/devtest/mt08.wb.noW.fakeEN && \
-rm ${DIR}/data/devtest/mt08.wb.noW.fakeALN && \
 #
 log "Removing sentence-initial W- COMPLETE" && \
-exit 0
+exit 0 || \
+#
+exit -1
+
