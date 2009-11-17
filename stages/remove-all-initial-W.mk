@@ -1,4 +1,19 @@
-STAGE := remove-all-initial-W
+################################################################################
+################################################################################
+####                                                                        ####
+####                      Preprocessing make file                           ####
+####                                                                        ####
+################################################################################
+################################################################################
+
+$(info )
+$(info This make file defines:)
+$(info --- how to remove all sentence-initial W- from an Arabic file)
+$(info )
+
+
+
+
 SCRIPT_NAME := reprocess_remove-W.pl
 
 define run
@@ -17,4 +32,4 @@ endef
 # Calculate the directory where this make file is stored
 PATH.TO.THIS.MAKEFILE:=$(dir $(lastword ${MAKEFILE_LIST}))
 
-include ${PATH.TO.THIS.MAKEFILE}/_common.mk
+include ${PATH.TO.THIS.MAKEFILE}/_common_dir_to_dir.mk

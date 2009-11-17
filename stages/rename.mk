@@ -1,18 +1,18 @@
 ################################################################################
 ################################################################################
 ####                                                                        ####
-####                      Preprocessing make file                           ####
+####                      File renaming make file                           ####
 ####                                                                        ####
 ################################################################################
 ################################################################################
 
 $(info )
 $(info This make file defines:)
-$(info --- how to preprocess a file)
+$(info --- how to rename training data from the IBM compressed file archive)
 $(info )
 
 
-SCRIPT_NAME := preprocess.pl
+SCRIPT_NAME := rename.sh
 
 # Define a shortcut to run the script
 define run
@@ -24,4 +24,10 @@ endef
 # Calculate the directory where this make file is stored
 PATH.TO.THIS.MAKEFILE:=$(dir $(lastword ${MAKEFILE_LIST}))
 
-include ${PATH.TO.THIS.MAKEFILE}/_common_dir_to_dir.mk
+include ${PATH.TO.THIS.MAKEFILE}/_common.mk
+
+all: | ${RESULT_DIR}
+
+${RESULT_DIR}:
+	mkdir -p $@
+	${SCRIPT} ${PREREQ_DIR} ${RESULT_DIR}

@@ -6,6 +6,7 @@
 ################################################################################
 ################################################################################
 
+$(info )
 $(info This make file defines:)
 $(info --- how to extract a grammar for a test set,)
 $(info --- how to split the test set into multiple chunks,)
@@ -80,7 +81,7 @@ TRANSLATE:=$(notdir ${TRANSLATE_WITH_PATH})
 # Calculate the number of lines in the file to be translated
 #
 # See section 8.11 The shell Function of the GNU Make Manual for the shell function. 
-TRANSLATE_SIZE:=$(shell wc -l ${TRANSLATE} | cut -d " " -f 1)
+TRANSLATE_SIZE:=$(shell wc -l ${TRANSLATE_WITH_PATH} | cut -d " " -f 1)
 
 # Calculate the number of lines in each split chunk of the file to be translated.
 # 
@@ -100,6 +101,17 @@ GLUE_GRAMMAR ?= ${JOSHUA}/grammars/hiero.glue
 # See section 6.1 Basics of Variable References of the GNU Make Manual for the $$ notation.
 # See section 8.11 The shell Function of the GNU Make Manual for the shell function.
 GRAMMARS=$(shell perl -e 'for ($$i=0; $$i<${SPLIT_SIZE}; $$i++) { printf("${GRAMMAR_ROOT}/${TRANSLATE}.%0".length(${SPLIT_SIZE}-1)."d.grammar ",$$i);}')
+
+# Calculate the name of each grammar file
+#
+# The shell command is more or less equivalant to using the `` notation.
+# The cammand is an inline perl script. Note that dollar signs for perl variables are indicated by $$.
+# Make uses $ as a variable indicator, so to let perl see the dollar sign, it must be escaped as $$.
+#
+# See section 6.1 Basics of Variable References of the GNU Make Manual for the $$ notation.
+# See section 8.11 The shell Function of the GNU Make Manual for the shell function.
+SPLIT_CHUNKS=$(shell perl -e 'for ($$i=0; $$i<${SPLIT_SIZE}; $$i++) { printf("${GRAMMAR_ROOT}/${TRANSLATE}/%0".length(${SPLIT_SIZE}-1)."d ",$$i);}')
+#$(info ${SPLIT_CHUNKS})
 
 # Calculate the name of each nbest translation output file
 #
@@ -174,13 +186,15 @@ ${GRAMMAR_ROOT}/${TRANSLATE}:
 
 # Split the data to be translated into chunks
 #
-${GRAMMAR_ROOT}/${TRANSLATE}/%: ${TRANSLATE_WITH_PATH} | ${GRAMMAR_ROOT}/${TRANSLATE}
+#${GRAMMAR_ROOT}/${TRANSLATE}/%: ${TRANSLATE_WITH_PATH} | ${GRAMMAR_ROOT}/${TRANSLATE}
+${SPLIT_CHUNKS}: ${TRANSLATE_WITH_PATH} | ${GRAMMAR_ROOT}/${TRANSLATE}
 	split -d -a ${DIGITS_IN_SPLIT_SIZE} -l ${TRANSLATE_SIZE_PER_CHUNK} ${TRANSLATE_WITH_PATH} ${GRAMMAR_ROOT}/${TRANSLATE}/
 
 # Extract translation grammars for each chunk of data to be translated.
 #
 ${GRAMMAR_ROOT}/${TRANSLATE}.%.grammar: ${GRAMMAR_ROOT}/${TRANSLATE}/% ${HIERO_EXTRACTION_INI} | ${GRAMMAR_ROOT} 
 	${HIERO} $< -c ${HIERO_EXTRACTION_INI} -x $@
+#${GRAMMARS}: ${GRAMMAR_ROOT}/${TRANSLATE}/% ${HIERO_EXTRACTION_INI} | ${GRAMMAR_ROOT} 
 
 # Construct a Joshua configuration file for a chunk of the data to be translated.
 #

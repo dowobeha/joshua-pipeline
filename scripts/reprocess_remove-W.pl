@@ -10,7 +10,7 @@ use warnings;
 use 5.008;           # Required for the next line, just to be safe
 use encoding "utf8"; # N.B. ''use utf8'' does not work to enable utf8 regexes
 
-use lib "/scratch/lane/pipeline/scripts";
+use lib "/home/lane/pipeline/scripts";
 use ParallelReprocess;
 
 ParallelReprocess::setExtentionDefaults();
