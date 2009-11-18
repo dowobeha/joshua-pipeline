@@ -8,8 +8,6 @@
 
 $(info )
 $(info This make file defines:)
-$(info --- how to extract a grammar for a test set,)
-$(info --- how to split the test set into multiple chunks,)
 $(info --- how to translate the chunks of the test set,)
 $(info --- how to post-process the translated chunks of the test set, and)
 $(info --- how to merge the final translated results into a single nbest output file.)
@@ -28,16 +26,13 @@ $(info )
 JOSHUA ?= $(error JOSHUA variable is not defined)
 JOSHUA_MEMORY_FLAGS ?= $(error JOSHUA_MEMORY_FLAGS is not defined)
 JOSHUA_CONFIG ?= $(error JOSHUA_CONFIG is not defined)
-TRAINING_SRC ?= $(error TRAINING_SRC is not defined)
-TRAINING_TGT ?= $(error TRAINING_TGT is not defined)
-TRAINING_ALN ?= $(error TRAINING_ALN is not defined)
+
 GRAMMAR_ROOT ?= $(error GRAMMAR_ROOT is not defined)
-HIERO ?= $(error HIERO is not defined)
-HIERO_COMPILE ?= $(error HIERO_COMPILE is not defined)
-HIERO_COMPILE_INI ?= $(error HIERO_COMPILE_INI is not defined)
 LM_FILE ?= $(error LM_FILE is not defined)
+
 SPLIT_SIZE ?= $(error SPLIT_SIZE is not defined)
 FILE_TO_TRANSLATE ?= $(error FILE_TO_TRANSLATE is not defined)
+
 NBEST_OUTPUT ?= $(error NBEST_OUTPUT is not defined)
 RENUMBER_NBEST_OUTPUT ?= $(error RENUMBER_NBEST_OUTPUT is not defined)
 
@@ -58,12 +53,6 @@ RENUMBER_NBEST_OUTPUT ?= $(error RENUMBER_NBEST_OUTPUT is not defined)
 #
 TRANSLATE_WITH_PATH:=$(realpath ${FILE_TO_TRANSLATE})
 
-# Define the location where the hiero suffix array will be created.
-HIERO_SUFFIX_ARRAY_DIR=${GRAMMAR_ROOT}/hiero_suffix_array
-
-# Define the location where the hiero extraction configuration file will be created,
-# unless this variable has already been defined.
-HIERO_EXTRACTION_INI ?= ${HIERO_SUFFIX_ARRAY_DIR}/out.ini
 
 # Calculate the number of digits needed to represent 
 # all ${SPLIT_SIZE} split chunks of the file to be translated.
@@ -102,7 +91,7 @@ GLUE_GRAMMAR ?= ${JOSHUA}/grammars/hiero.glue
 # See section 8.11 The shell Function of the GNU Make Manual for the shell function.
 GRAMMARS=$(shell perl -e 'for ($$i=0; $$i<${SPLIT_SIZE}; $$i++) { printf("${GRAMMAR_ROOT}/${TRANSLATE}.%0".length(${SPLIT_SIZE}-1)."d.grammar ",$$i);}')
 
-# Calculate the name of each grammar file
+# Calculate the name of each chunk of data to be translated
 #
 # The shell command is more or less equivalant to using the `` notation.
 # The cammand is an inline perl script. Note that dollar signs for perl variables are indicated by $$.
@@ -111,7 +100,6 @@ GRAMMARS=$(shell perl -e 'for ($$i=0; $$i<${SPLIT_SIZE}; $$i++) { printf("${GRAM
 # See section 6.1 Basics of Variable References of the GNU Make Manual for the $$ notation.
 # See section 8.11 The shell Function of the GNU Make Manual for the shell function.
 SPLIT_CHUNKS=$(shell perl -e 'for ($$i=0; $$i<${SPLIT_SIZE}; $$i++) { printf("${GRAMMAR_ROOT}/${TRANSLATE}/%0".length(${SPLIT_SIZE}-1)."d ",$$i);}')
-#$(info ${SPLIT_CHUNKS})
 
 # Calculate the name of each nbest translation output file
 #
@@ -161,40 +149,6 @@ endef
 ################################################################################
 
 all: ${NBEST_OUTPUT}
-
-
-# Construct an empty directory for the Hiero suffix array files
-#
-${HIERO_SUFFIX_ARRAY_DIR}:
-	mkdir -p $@
-
-# Compile the Hiero suffix array,
-# and construct a configuration file for use during grammar extraction
-#
-${HIERO_EXTRACTION_INI}:  ${TRAINING_SRC} ${TRAINING_TGT} ${TRAINING_ALN} | ${HIERO_SUFFIX_ARRAY_DIR}
-	${HIERO_COMPILE} ${TRAINING_SRC} ${TRAINING_TGT} ${TRAINING_ALN} /dev/null ${HIERO_COMPILE_INI} ${HIERO_SUFFIX_ARRAY_DIR} > $@
-
-# Construct an empty directory to store translation grammars and files to be translated.
-#
-${GRAMMAR_ROOT}:
-	mkdir -p $@
-
-# Construct an empty directory to store the chunks of data to be translated.
-#
-${GRAMMAR_ROOT}/${TRANSLATE}:
-	mkdir -p $@
-
-# Split the data to be translated into chunks
-#
-#${GRAMMAR_ROOT}/${TRANSLATE}/%: ${TRANSLATE_WITH_PATH} | ${GRAMMAR_ROOT}/${TRANSLATE}
-${SPLIT_CHUNKS}: ${TRANSLATE_WITH_PATH} | ${GRAMMAR_ROOT}/${TRANSLATE}
-	split -d -a ${DIGITS_IN_SPLIT_SIZE} -l ${TRANSLATE_SIZE_PER_CHUNK} ${TRANSLATE_WITH_PATH} ${GRAMMAR_ROOT}/${TRANSLATE}/
-
-# Extract translation grammars for each chunk of data to be translated.
-#
-${GRAMMAR_ROOT}/${TRANSLATE}.%.grammar: ${GRAMMAR_ROOT}/${TRANSLATE}/% ${HIERO_EXTRACTION_INI} | ${GRAMMAR_ROOT} 
-	${HIERO} $< -c ${HIERO_EXTRACTION_INI} -x $@
-#${GRAMMARS}: ${GRAMMAR_ROOT}/${TRANSLATE}/% ${HIERO_EXTRACTION_INI} | ${GRAMMAR_ROOT} 
 
 # Construct a Joshua configuration file for a chunk of the data to be translated.
 #
@@ -247,28 +201,4 @@ ${NBEST_OUTPUT}: ${NBEST_PARTS}
 # See section 10.7 Old-Fashioned Suffix Rules of the GNU Make Manual.
 #
 .SUFFIXES:
-
-
-
-
-###########################################
-#
-#  The following can probably be deleted.
-
-
-# This function concatenates the contents of a list of prerequisite files ($^),
-# into an output target file ($@).
-#
-# To use, put ${MERGE} as the contents of a make target.
-#
-# This is essentially equivalent to calling "cat $< > $@"
-#
-# However, when make is run with the -j option (parallel execution),
-# it is dangerous and unpredictable to use standard input.
-#
-# See section 5.4 Parallel Execution of the GNU Make Manual for more on this problem.
-#define MERGE
-#perl -e '$$lastArg=$$#ARGV; $$lastArg>0 || exit; open OUT, ">$$ARGV[$$lastArg]" or die $$!; for ($$i=0; $$i<$$lastArg; $$i++) { open FILE, "$$ARGV[$$i]" or die $$!; while (my $$line = <FILE>) { print OUT "$$line";} close FILE;  } close OUT;' $^ $@
-#endef
-
 
