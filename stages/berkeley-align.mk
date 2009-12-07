@@ -32,6 +32,7 @@ SRC ?= $(error SRC is not defined)
 TGT ?= $(error TGT is not defined)
 
 BERKELEY_ALIGNER_JAR ?= $(error BERKELEY_ALIGNER_JAR is not defined)
+BERKELEY_NUM_THREADS ?= 1
 JVM_FLAGS ?= -d64 -Dfile.encoding=utf8 -XX:MinHeapFreeRatio=10 -Xms50g -Xmx50g
 
 #PREREQ_DIR_LINKS ?= ${RESULTS_DIR}/training
@@ -93,7 +94,7 @@ ${RESULTS_DIR}/berkeley.aligner.config: | ${RESULTS_DIR}
 	@echo "execDir	${ALIGNMENTS_DIR}" >> $@
 	@echo "create" >> $@
 	@echo "saveParams	true" >> $@
-	@echo "numThreads	20" >> $@
+	@echo "numThreads	${BERKELEY_NUM_THREADS" >> $@
 	@echo "msPerLine	10000" >> $@
 	@echo "alignTraining" >> $@
 	@echo "" >> $@

@@ -26,15 +26,18 @@ STAGE_NUMBER ?= $(error STAGE_NUMBER is not defined)
 
 JOSHUA ?= $(error JOSHUA variable is not defined)
 JOSHUA_MEMORY_FLAGS ?= $(error JOSHUA_MEMORY_FLAGS is not defined)
-JOSHUA_CONFIG ?= $(error JOSHUA_CONFIG is not defined)
+JOSHUA_THREADS ?= $(error JOSHUA_THREADS is not defined)
 
-GRAMMAR_ROOT ?= $(error GRAMMAR_ROOT is not defined)
+MERT_JVM_FLAGS ?= $(error MERT_JVM_FLAGS is not defined)
+
+TM_GRAMMAR ?= $(error TM_GRAMMAR is not defined)
 LM_FILE ?= $(error LM_FILE is not defined)
 LM_ORDER ?= $(error LM_ORDER is not defined)
 
-SPLIT_SIZE ?= $(error SPLIT_SIZE is not defined)
+#SPLIT_SIZE ?= $(error SPLIT_SIZE is not defined)
 FILE_TO_TRANSLATE ?= $(error FILE_TO_TRANSLATE is not defined)
 REFERENCE_BASE ?= $(error REFERENCE_BASE is not defined)
+NUM_REFERENCES ?= $(error NUM_REFERENCES is not defined)
 
 NBEST_OUTPUT ?= $(error NBEST_OUTPUT is not defined)
 RENUMBER_NBEST_OUTPUT ?= $(error RENUMBER_NBEST_OUTPUT is not defined)
@@ -62,7 +65,9 @@ MERT_DIR ?= ${EXPERIMENT_DIR}/${STAGE_NUMBER}.${STAGE_NAME}
 ################################################################################
 ################################################################################
 
-all: ${MERT_DIR}/mert.params ${MERT_DIR}/mert.config ${MERT_DIR}/joshua.config
+
+${MERT_DIR}/joshua.config.ZMERT.final: ${MERT_DIR}/mert.params ${MERT_DIR}/mert.config ${MERT_DIR}/joshua.config ${MERT_DIR}/decoder.command | ${MERT_DIR}
+	java ${MERT_JVM_FLAGS} -cp ${JOSHUA}/bin joshua.zmert.ZMERT ${MERT_DIR}/mert.config &> ${MERT_DIR}/mert.out.log
 
 
 ${MERT_DIR}/mert.params: | ${MERT_DIR}
@@ -76,7 +81,7 @@ ${MERT_DIR}/mert.params: | ${MERT_DIR}
 ${MERT_DIR}/mert.config: | ${MERT_DIR}
 	@echo "-s	${FILE_TO_TRANSLATE}    # source sentences file name" > $@
 	@echo "-r	${REFERENCE_BASE}                     # target sentences file name (in this case, file name prefix)" >> $@
-	@echo "-rps	4                       # references per sentence" >> $@
+	@echo "-rps	${NUM_REFERENCES}                       # references per sentence" >> $@
 	@echo "-p	${MERT_DIR}/mert.params             # parameter file" >> $@
 	@echo "-m	BLEU 4 closest          # evaluation metric and its options" >> $@
 	@echo "-maxIt	20                      # maximum MERT iterations" >> $@
@@ -90,7 +95,10 @@ ${MERT_DIR}/mert.config: | ${MERT_DIR}
 	@echo "-seed   12341234                # random number generator seed" >> $@
 
 ${MERT_DIR}/joshua.config: | ${MERT_DIR}
-	@echo "" > $@
+	@echo "tm_file=${TM_GRAMMAR}" > $@ 
+	@echo "lm_file=${LM_FILE}" >> $@
+	@echo "glue_file=${JOSHUA}/grammars/hiero.glue" >> $@
+	@echo "" >> $@
 	@echo "tm_format=hiero" >> $@
 	@echo "glue_format=hiero" >> $@
 	@echo "" >> $@
@@ -134,7 +142,7 @@ ${MERT_DIR}/joshua.config: | ${MERT_DIR}
 	@echo "" >> $@
 	@echo "" >> $@
 	@echo "#parallel deocoder: it cannot be used together with remote lm" >> $@
-	@echo "num_parallel_decoders=1" >> $@
+	@echo "num_parallel_decoders=${JOSHUA_THREADS}" >> $@
 	@echo "parallel_files_prefix=/tmp/" >> $@
 	@echo "" >> $@
 	@echo "" >> $@
@@ -149,6 +157,16 @@ ${MERT_DIR}/joshua.config: | ${MERT_DIR}
 	@echo "" >> $@
 	@echo "#wordpenalty weight" >> $@
 	@echo "wordpenalty -2.844814" >> $@
+
+
+${MERT_DIR}/decoder.command: | ${MERT_DIR}
+	@echo "#!/bin/bash" > $@
+	@echo "" >> $@
+	@echo "java ${JOSHUA_MEMORY_FLAGS} -cp ${JOSHUA}/bin -Djava.library.path=${JOSHUA}/lib -Dfile.encoding=utf8 joshua.decoder.JoshuaDecoder ${MERT_DIR}/joshua.config ${FILE_TO_TRANSLATE} ${MERT_DIR}/nbest.out.with_untranslated_words" >> $@
+	@echo "" >> $@
+	@echo "${SCRIPTS_DIR}/strip-nonASCII-v2.rb < ${MERT_DIR}/nbest.out.with_untranslated_words > ${MERT_DIR}/nbest.out" >> $@
+	chmod ug+x $@
+
 
 ${MERT_DIR}:
 	mkdir -p $@

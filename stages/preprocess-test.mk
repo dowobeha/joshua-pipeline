@@ -21,9 +21,6 @@ define run
 ${SCRIPT} $< $@
 endef
 
-
-SGM_FILES ?= $(error SGM_FILES is not defined)
-
 EXPERIMENT_DIR ?= $(error EXPERIMENT_DIR is not defined)
 STAGE_NAME ?= $(error STAGE_NAME is not defined)
 STAGE_NUMBER ?= $(error STAGE_NUMBER is not defined)
@@ -33,6 +30,7 @@ TEST_OUTPUT_DIR ?= ${EXPERIMENT_DIR}/${STAGE_NUMBER}.${STAGE_NAME}
 SUFFIX ?= .sgm
 
 PREREQ_DIR ?= $(error PREREQ_DIR is not defined)
+SGM_FILES ?= $(wildcard ${PREREQ_DIR}/*.sgm)
 
 ###############################################
 # Calculate the list of files to create.....  #

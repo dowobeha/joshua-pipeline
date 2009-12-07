@@ -14,7 +14,6 @@ $(info --- how to merge the final translated results into a single nbest output 
 $(info )
 
 
-
 ################################################################################
 ################################################################################
 ####                                                                        ####
@@ -23,19 +22,17 @@ $(info )
 ################################################################################
 ################################################################################
 
+EXPERIMENT_DIR ?= $(error EXPERIMENT_DIR is not defined)
+STAGE_NAME ?= $(error STAGE_NAME is not defined)
+STAGE_NUMBER ?= $(error STAGE_NUMBER is not defined)
+
 JOSHUA ?= $(error JOSHUA variable is not defined)
 JOSHUA_MEMORY_FLAGS ?= $(error JOSHUA_MEMORY_FLAGS is not defined)
 JOSHUA_CONFIG ?= $(error JOSHUA_CONFIG is not defined)
 
-GRAMMAR_ROOT ?= $(error GRAMMAR_ROOT is not defined)
-LM_FILE ?= $(error LM_FILE is not defined)
+MBR_MEMORY_FLAGS ?= $(error MBR_MEMORY_FLAGS is not defined)
 
-SPLIT_SIZE ?= $(error SPLIT_SIZE is not defined)
 FILE_TO_TRANSLATE ?= $(error FILE_TO_TRANSLATE is not defined)
-
-NBEST_OUTPUT ?= $(error NBEST_OUTPUT is not defined)
-RENUMBER_NBEST_OUTPUT ?= $(error RENUMBER_NBEST_OUTPUT is not defined)
-
 
 
 ################################################################################
@@ -46,98 +43,11 @@ RENUMBER_NBEST_OUTPUT ?= $(error RENUMBER_NBEST_OUTPUT is not defined)
 ################################################################################
 ################################################################################
 
+# Strip the directory path from the file name
+BASE_NAME:=$(notdir ${FILE_TO_TRANSLATE})
 
-# Get the full canonical path to the file to be translated
-#
-# See section 8.3 Functions for File Names of the GNU Make Manual.
-#
-TRANSLATE_WITH_PATH:=$(realpath ${FILE_TO_TRANSLATE})
-
-
-# Calculate the number of digits needed to represent 
-# all ${SPLIT_SIZE} split chunks of the file to be translated.
-#                                                                                                                                                                                                  
-# This command uses an inline perl script.                                                                                                                                                                      
-# See section 8.11 The shell Function of the GNU Make Manual for the shell function. 
-DIGITS_IN_SPLIT_SIZE:=$(shell perl -e "use POSIX qw(ceil); print length(ceil(${SPLIT_SIZE}-1))")
-
-# Get the filename of the file to be translated, discarding any preceding path name information.
-#
-# See section 8.3 Functions for File Names of the GNU Make Manual for the notdir function
-TRANSLATE:=$(notdir ${TRANSLATE_WITH_PATH})
-
-
-# Calculate the number of lines in the file to be translated
-#
-# See section 8.11 The shell Function of the GNU Make Manual for the shell function. 
-TRANSLATE_SIZE:=$(shell wc -l ${TRANSLATE_WITH_PATH} | cut -d " " -f 1)
-
-# Calculate the number of lines in each split chunk of the file to be translated.
-# 
-# This command uses an inline perl script.
-# See section 8.11 The shell Function of the GNU Make Manual for the shell function.
-TRANSLATE_SIZE_PER_CHUNK:=$(shell perl -e "use POSIX qw(ceil); print ceil(${TRANSLATE_SIZE}/${SPLIT_SIZE})")
-
-# Define the location of the Joshua glue grammar, unless it has already been defined.
-GLUE_GRAMMAR ?= ${JOSHUA}/grammars/hiero.glue
-
-# Calculate the name of each grammar file
-#
-# The shell command is more or less equivalant to using the `` notation.
-# The cammand is an inline perl script. Note that dollar signs for perl variables are indicated by $$.
-# Make uses $ as a variable indicator, so to let perl see the dollar sign, it must be escaped as $$.
-#
-# See section 6.1 Basics of Variable References of the GNU Make Manual for the $$ notation.
-# See section 8.11 The shell Function of the GNU Make Manual for the shell function.
-GRAMMARS=$(shell perl -e 'for ($$i=0; $$i<${SPLIT_SIZE}; $$i++) { printf("${GRAMMAR_ROOT}/${TRANSLATE}.%0".length(${SPLIT_SIZE}-1)."d.grammar ",$$i);}')
-
-# Calculate the name of each chunk of data to be translated
-#
-# The shell command is more or less equivalant to using the `` notation.
-# The cammand is an inline perl script. Note that dollar signs for perl variables are indicated by $$.
-# Make uses $ as a variable indicator, so to let perl see the dollar sign, it must be escaped as $$.
-#
-# See section 6.1 Basics of Variable References of the GNU Make Manual for the $$ notation.
-# See section 8.11 The shell Function of the GNU Make Manual for the shell function.
-SPLIT_CHUNKS=$(shell perl -e 'for ($$i=0; $$i<${SPLIT_SIZE}; $$i++) { printf("${GRAMMAR_ROOT}/${TRANSLATE}/%0".length(${SPLIT_SIZE}-1)."d ",$$i);}')
-
-# Calculate the name of each nbest translation output file
-#
-# The shell command is more or less equivalant to using the `` notation.
-# The cammand is an inline perl script. Note that dollar signs for perl variables are indicated by $$.
-# Make uses $ as a variable indicator, so to let perl see the dollar sign, it must be escaped as $$.
-#
-# See section 6.1 Basics of Variable References of the GNU Make Manual for the $$ notation.
-# See section 8.11 The shell Function of the GNU Make Manual for the shell function.
-NBEST_PARTS=$(shell perl -e 'for ($$i=0; $$i<${SPLIT_SIZE}; $$i++) { printf("${NBEST_OUTPUT}.%0".length(${SPLIT_SIZE}-1)."d ",$$i);}')
-
-
-
-################################################################################
-################################################################################
-####                                                                        ####
-####                       Canned Commands                                  ####
-####                                                                        ####
-################################################################################
-################################################################################
-
-
-# Convenience function to run the decoder
-#
-# This is a canned command, as defined in 
-# section 5.8 Defining Canned Command Sequences of the GNU Make Manual.
-define RUN_DECODER
-java ${JOSHUA_MEMORY_FLAGS} -cp ${JOSHUA}/bin -Djava.library.path=${JOSHUA}/lib -Dfile.encoding=utf8 joshua.decoder.JoshuaDecoder $^ $@.raw_output &> $@.log
-endef
-
-# Convenience function to run post-processing
-#
-# This is a canned command, as defined in 
-# section 5.8 Defining Canned Command Sequences of the GNU Make Manual.
-define POST_PROCESS
-/scratch/lane/2009-11-09_subsampled.berkeley_alignments.mert/strip-nonASCII-v2.rb < $@.raw_output > $@
-endef
-
+# Directory where results will be stored
+BASE_DIR:=${EXPERIMENT_DIR}/${STAGE_NUMBER}.${STAGE_NAME}
 
 
 ################################################################################
@@ -148,29 +58,38 @@ endef
 ################################################################################
 ################################################################################
 
-all: ${NBEST_OUTPUT}
-
-# Construct a Joshua configuration file for a chunk of the data to be translated.
-#
-${JOSHUA_CONFIG}.%: ${JOSHUA_CONFIG} | ${LM_FILE} ${GRAMMAR_ROOT}/${TRANSLATE}.%.grammar ${GLUE_GRAMMAR}
-	echo "lm_file=${LM_FILE}" > $@
-	echo "tm_file=${GRAMMAR_ROOT}/${TRANSLATE}.$*.grammar" >> $@
-	echo "glue_file=${GLUE_GRAMMAR}" >> $@
-	cat ${JOSHUA_CONFIG} >> $@
-
-# Translate and post-process a chunk of the data to be translated.
-#
-${NBEST_OUTPUT}.%: ${JOSHUA_CONFIG}.% ${GRAMMAR_ROOT}/${TRANSLATE}/%
-	${RUN_DECODER}
-	${POST_PROCESS}
-
-# Concatenate all translated data chunks.
-#
-${NBEST_OUTPUT}: ${NBEST_PARTS}
-	cat ${NBEST_PARTS} > $@.raw
-	${RENUMBER_NBEST_OUTPUT} < $@.raw > $@
+all: ${BASE_DIR}/nbest/${BASE_NAME} ${BASE_DIR}/1best/${BASE_NAME}
 
 
+${BASE_DIR}/1best/${BASE_NAME}: ${BASE_DIR}/nbest/${BASE_NAME} | ${BASE_DIR}/1best
+#	Run Minimum Bayes Risk extraction using specified JVM parameters
+	java ${MBR_MEMORY_FLAGS} -cp ${JOSHUA}/bin \
+		joshua.decoder.NbestMinRiskReranker $< $@ false 1
+
+${BASE_DIR}/nbest/${BASE_NAME}: ${BASE_DIR}/raw_decoder_output/${BASE_NAME} | ${BASE_DIR}/nbest
+	${SCRIPTS_DIR}/strip-nonASCII-v2.rb < $< > $@
+
+${BASE_DIR}/raw_decoder_output/${BASE_NAME}: ${FILE_TO_TRANSLATE} ${JOSHUA_CONFIG} | ${BASE_DIR}/raw_decoder_output
+#	Run Joshua using specified JVM parameters
+	java ${JOSHUA_MEMORY_FLAGS} -cp ${JOSHUA}/bin \
+		-Djava.library.path=${JOSHUA}/lib \
+		-Dfile.encoding=utf8 \
+		joshua.decoder.JoshuaDecoder \
+		${JOSHUA_CONFIG} \
+		${FILE_TO_TRANSLATE} \
+		$@
+
+${BASE_DIR}/1best:
+	mkdir -p $@
+
+${BASE_DIR}/nbest:
+	mkdir -p $@
+
+${BASE_DIR}/raw_decoder_output:
+	mkdir -p $@
+
+${BASE_DIR}:
+	mkdir -p $@
 
 ################################################################################
 ################################################################################
@@ -187,11 +106,6 @@ ${NBEST_OUTPUT}: ${NBEST_PARTS}
 #
 .PHONY: all
 
-# Automatically delete these files
-#
-# See section 10.4 Chains of Implicit Rules of the GNU Make Manual.
-#
-.INTERMEDIATE: ${JOSHUA_CONFIG}.* ${NBEST_OUTPUT}.*
 
 # By default, make has a lot of old-fashioned suffix rules that it will try to use. 
 #
