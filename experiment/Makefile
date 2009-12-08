@@ -57,36 +57,68 @@ export MANIFEST=xin afp
 export HIERO_DIR:=/home/zli/work/hiero/copy_2008/sa_copy/sa-hiero_adapted
 
 # Define how many parts to split into
-export SPLIT_SIZE:=10
+#export SPLIT_SIZE:=10
 
-# Define what files need to be translated
-#FILES_TO_TRANSLATE:=$(wildcard /scratch/lane/gale/02.remove-all-initial-W.test.ar/*)
+export BERKELEY_ALIGNER_JAR:=${EXPERIMENT_DIR}/berkeleyaligner/berkeleyaligner.jar
 
-# Define a make function
-#    that defines how to extract rules for a file to translate
-#
-# This function takes 1 argument - the file to translate
-#define EXTRACT_TEMPLATE
-#	$(MAKE) -f ${MAKE_DIR}/extract-rules.mk -j ${SPLIT_SIZE} STAGE_NUMBER=05 STAGE_NAME=extract-rules TRAINING_SRC=${EXPERIMENT_DIR}/04.berkeley-align/training/subsampled.ar TRAINING_TGT=${EXPERIMENT_DIR}/04.berkeley-align/training/subsampled.en TRAINING_ALN=${EXPERIMENT_DIR}/04.berkeley-align/alignments/training.en-ar.align FILE_TO_TRANSLATE=$1
-#endef
 
-all:
+
+all: \
+	extract-training-data \
+	preprocess-training-data \
+	extract-test-data \
+	preprocess-test-data \
+	subsample \
+	${BERKELEY_ALIGNER_JAR} \
+	berkeley-align \
+	extract-grammar \
+	mert.nw \
+	mert.wb \
+	decode.nw \
+	decode.wb
+
+
+
+${BERKELEY_ALIGNER_JAR}: ${EXPERIMENT_DIR}/berkeleyaligner/berkeleyaligner_unsupervised-2.1.tar.gz | ${EXPERIMENT_DIR}/berkeleyaligner
+	tar xvzf $< berkeleyaligner/berkeleyaligner.jar
+	@touch $@
+
+${EXPERIMENT_DIR}/berkeleyaligner/berkeleyaligner_unsupervised-2.1.tar.gz: | ${EXPERIMENT_DIR}/berkeleyaligner
+	wget http://berkeleyaligner.googlecode.com/files/berkeleyaligner_unsupervised-2.1.tar.gz
+	mv berkeleyaligner_unsupervised-2.1.tar.gz ${EXPERIMENT_DIR}/berkeleyaligner
+
+${EXPERIMENT_DIR}/berkeleyaligner:
+	mkdir -p $@
+
+
+extract-training-data:
 #
 #	Extract training files from IBM archive file
-	$(MAKE) -f ${MAKE_DIR}/extract-files.mk -j 1 STAGE_NUMBER=00 STAGE_NAME=extract_from_IBM PREREQ_DIR=/scratch/OriginalFiles
+	$(MAKE) -f ${MAKE_DIR}/extract-files.mk -j 1 \
+		STAGE_NUMBER=00 STAGE_NAME=extract_from_IBM \
+		PREREQ_DIR=/scratch/OriginalFiles
 #
-#	Create nicely-named links to the training files
-	$(MAKE) -f ${MAKE_DIR}/rename.mk STAGE_NUMBER=00 STAGE_NAME=extract_from_IBM.ar PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM/arfiles/atb
-	$(MAKE) -f ${MAKE_DIR}/rename.mk STAGE_NUMBER=00 STAGE_NAME=extract_from_IBM.en PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM/enfiles/tok
+#	Create nicely-named links to the training source files
+	$(MAKE) -f ${MAKE_DIR}/rename.mk \
+		STAGE_NUMBER=00 STAGE_NAME=extract_from_IBM.ar \
+		PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM/arfiles/atb
 #
+#	Create nicely-named links to the training source files
+	$(MAKE) -f ${MAKE_DIR}/rename.mk \
+		STAGE_NUMBER=00 STAGE_NAME=extract_from_IBM.en \
+		PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM/enfiles/tok
+
+
+preprocess-training-data:
 #	Preprocess training data
 	$(MAKE) -f ${MAKE_DIR}/preprocessed.mk STAGE_NUMBER=00 STAGE_NAME=preprocess.training.ar PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM.ar
 	$(MAKE) -f ${MAKE_DIR}/preprocessed.mk STAGE_NUMBER=00 STAGE_NAME=preprocess.training.en PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM.en
 #
 #	Remove sentence-initial W- from Arabic training files
 	$(MAKE) -f ${MAKE_DIR}/remove-all-initial-W.mk STAGE_NUMBER=01 STAGE_NAME=remove-all-initial-W.training.ar PREREQ_DIR=${EXPERIMENT_DIR}/00.preprocess.training.ar
-#
-#
+
+
+extract-test-data:
 #	Extract MT06 test file from IBM archive file
 	$(MAKE) -f ${MAKE_DIR}/extract-test.mk STAGE_NUMBER=02 STAGE_NAME=extract_test_from_IBM.ar IBM_ARCHIVE=/scratch/OriginalFiles/Rosetta-P4-ae-testsets-v1.1.tgz SGM_FILE=tok-v3-a/mt06_arabic_evlset_nist_part_v1.reforder.tok-v3.sgm
 #	Extract NW test files from IBM archive file
@@ -103,34 +135,69 @@ all:
 #	Extract reference files from IBM archive file
 	$(MAKE) -f ${MAKE_DIR}/extract-test.mk STAGE_NUMBER=02 STAGE_NAME=extract_test_from_IBM.en IBM_ARCHIVE=/scratch/OriginalFiles/GALE-P4-Rosetta-DryRun-Text.tgz SGM_FILE=scoring/refs/arabic/GALE-DEV09-arabic-text-nw-tune.ref.sgm
 	$(MAKE) -f ${MAKE_DIR}/extract-test.mk STAGE_NUMBER=02 STAGE_NAME=extract_test_from_IBM.en IBM_ARCHIVE=/scratch/OriginalFiles/GALE-P4-Rosetta-DryRun-Text.tgz SGM_FILE=scoring/refs/arabic/GALE-DEV09-arabic-text-wb-tune.ref.sgm
-#
+
+
+preprocess-test-data:
 #	Preprocess test files
 	$(MAKE) -f ${MAKE_DIR}/preprocess-test.mk STAGE_NUMBER=02 STAGE_NAME=preprocess.test.ar PREREQ_DIR=${EXPERIMENT_DIR}/02.extract_test_from_IBM.ar
 	$(MAKE) -f ${MAKE_DIR}/preprocess-test.mk STAGE_NUMBER=02 STAGE_NAME=preprocess.test.en PREREQ_DIR=${EXPERIMENT_DIR}/02.extract_test_from_IBM.en
 #
 #	Remove sentence-initial W- from Arabic test files
 	$(MAKE) -f ${MAKE_DIR}/remove-all-initial-W.mk STAGE_NUMBER=02 STAGE_NAME=remove-all-initial-W.test.ar PREREQ_DIR=${EXPERIMENT_DIR}/02.preprocess.test.ar
-#
+
+
+subsample:
 #	Perform subsampling
 	$(MAKE) -f ${MAKE_DIR}/subsample.mk STAGE_NUMBER=03 STAGE_NAME=subsample SRC=ar TGT=en PREREQ_DIR_TEST=${EXPERIMENT_DIR}/02.remove-all-initial-W.test.ar PREREQ_DIR_SRC=${EXPERIMENT_DIR}/01.remove-all-initial-W.training.ar PREREQ_DIR_TGT=${EXPERIMENT_DIR}/00.preprocess.training.en
-#
+
+berkeley-align:
 #	Perform Berkeley alignment
-	$(MAKE) -f ${MAKE_DIR}/berkeley-align.mk STAGE_NUMBER=04 STAGE_NAME=berkeley-align PREREQ_DIR=${EXPERIMENT_DIR}/03.subsample SRC=ar TGT=en BERKELEY_ALIGNER_JAR=${EXPERIMENT_DIR}/berkeleyaligner.jar
-#
+	$(MAKE) -f ${MAKE_DIR}/berkeley-align.mk STAGE_NUMBER=04 STAGE_NAME=berkeley-align PREREQ_DIR=${EXPERIMENT_DIR}/03.subsample SRC=ar TGT=en
+
+extract-grammar:
 #	Extract grammar 
 	$(MAKE) -f ${MAKE_DIR}/extract-rules-hiero.mk STAGE_NUMBER=05 STAGE_NAME=hiero-extract-rules TRAINING_SRC=${EXPERIMENT_DIR}/04.berkeley-align/training/subsampled.ar TRAINING_TGT=${EXPERIMENT_DIR}/04.berkeley-align/training/subsampled.en TRAINING_ALIGN=${EXPERIMENT_DIR}/04.berkeley-align/alignments/training.en-ar.align TEST_SRC=${EXPERIMENT_DIR}/03.subsample/subsample.test.ar
-#
+
+mert.nw:
 #	Run MERT for NW
-	$(MAKE) -f ${MAKE_DIR}/mert.mk STAGE_NUMBER=06 STAGE_NAME=mert.nw TM_GRAMMAR=${EXPERIMENT_DIR}/05.hiero-extract-rules/subsample.test.ar.grammar FILE_TO_TRANSLATE=${EXPERIMENT_DIR}/02.preprocess.test.ar/GALE-DEV09-arabic-text-nw-tune.atb-v3.1.unk.split NUM_REFERENCES=1 REFERENCE_BASE=02.preprocess.test.en/GALE-DEV09-arabic-text-nw-tune.ref
-#
+	$(MAKE) -f ${MAKE_DIR}/mert.mk STAGE_NUMBER=06 STAGE_NAME=mert.nw \
+		TM_GRAMMAR=${EXPERIMENT_DIR}/05.hiero-extract-rules/subsample.test.ar.grammar \
+		FILE_TO_TRANSLATE=${EXPERIMENT_DIR}/02.preprocess.test.ar/GALE-DEV09-arabic-text-nw-tune.atb-v3.1.unk.split \
+		NUM_REFERENCES=1 \
+		REFERENCE_BASE=02.preprocess.test.en/GALE-DEV09-arabic-text-nw-tune.ref
+
+
+mert.wb:
+#	Run MERT for NW
+	$(MAKE) -f ${MAKE_DIR}/mert.mk STAGE_NUMBER=06 STAGE_NAME=mert.wb \
+		TM_GRAMMAR=${EXPERIMENT_DIR}/05.hiero-extract-rules/subsample.test.ar.grammar \
+		FILE_TO_TRANSLATE=${EXPERIMENT_DIR}/02.preprocess.test.ar/GALE-DEV09-arabic-text-wb-tune.spell.atb-v3.1.unk.split \
+		NUM_REFERENCES=1 \
+		REFERENCE_BASE=02.preprocess.test.en/GALE-DEV09-arabic-text-wb-tune.ref
+
+
+
+define DECODE
+	$(MAKE) -f ${MAKE_DIR}/decode.mk STAGE_NUMBER=${1} STAGE_NAME=decode.${2} \
+		FILE_TO_TRANSLATE=${3} \
+		JOSHUA_CONFIG=06.mert.${2}/joshua.config.ZMERT.final
+endef
+
+decode.nw: mert.nw
 #	Translate!
-	$(MAKE) -f ${MAKE_DIR}/decode.mk STAGE_NUMBER=07 STAGE_NAME=decode.nw \
-		FILE_TO_TRANSLATE=${EXPERIMENT_DIR}/02.preprocess.test.ar/GALE-DEV09-arabic-text-nw-dev.atb-v3.1.unk.split \
-		JOSHUA_CONFIG=06.mert.nw/joshua.config.ZMERT.final
+	$(call DECODE,07,nw,${EXPERIMENT_DIR}/02.preprocess.test.ar/GALE-DEV09-arabic-text-nw-dev.atb-v3.1.unk.split)
+	$(call DECODE,07,nw,${EXPERIMENT_DIR}/02.preprocess.test.ar/mt08_arabic_evalset_current_v0-nw.atb-v3.1.unk.split)
+	$(call DECODE,07,nw,${EXPERIMENT_DIR}/02.preprocess.test.ar/GALE-DEV09test+P3unseq-arabic-text-nw.atb-v3.1.unk.split)
+
+decode.wb: mert.wb
+#	Translate!
+	$(call DECODE,07,wb,${EXPERIMENT_DIR}/02.preprocess.test.ar/GALE-DEV09-arabic-text-wb-dev.spell.atb-v3.1.unk.split)
+	$(call DECODE,07,wb,${EXPERIMENT_DIR}/02.preprocess.test.ar/mt08_arabic_evalset_current_v0-wb.spell.atb-v3.1.unk.split)
+	$(call DECODE,07,wb,${EXPERIMENT_DIR}/02.preprocess.test.ar/GALE-DEV09test+DEV08-arabic-text-wb.spell.atb-v3.1.unk.split)
+
 
 cleanest:
 	@clear
-#	rm -rf $(wildcard [0-9][0-9].*)
 	rm -rf $(shell ls -dp */)
 	@pwd
 	@ls
