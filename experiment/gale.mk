@@ -31,6 +31,8 @@ export SCRIPTS_DIR:=/home/lane/pipeline/scripts
 # Define Joshua pruning parameters
 export MAX_N_ITEMS:=30
 
+# Define MERT metric
+export METRIC:=TER-BLEU nocase punc 20 50 ${EXPERIMENT_DIR}/tercom.7.25.jar 6 4 closest
 
 # Define path to Joshua
 export JOSHUA:=${EXPERIMENT_DIR}/joshua

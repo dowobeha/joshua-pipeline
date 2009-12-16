@@ -21,7 +21,7 @@ HIERO_DIR ?= $(error HIERO_DIR is not defined)
 ARCHIVE_FILE ?= $(error ARCHIVE_FILE is not defined)
 FILES_TO_EXTRACT ?= $(error FILES_TO_EXTRACT is not defined)
 MANIFEST ?= $(error MANIFEST is not defined)
-
+METRIC ?= $(error METRIC is not defined. Set to BLEU 4 closest if you want to use BLEU)
 
 all: decode.nw decode.wb
 
@@ -74,11 +74,11 @@ extract-training-data:
 
 preprocess-training-data: extract-training-data
 #	Preprocess training data
-	$(MAKE) -f ${MAKE_DIR}/preprocessed.mk STAGE_NUMBER=00 STAGE_NAME=preprocess.training.ar PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM.ar
-	$(MAKE) -f ${MAKE_DIR}/preprocessed.mk STAGE_NUMBER=00 STAGE_NAME=preprocess.training.en PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM.en
+	$(MAKE) -f ${MAKE_DIR}/preprocessed.mk -j 20 STAGE_NUMBER=00 STAGE_NAME=preprocess.training.ar PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM.ar
+	$(MAKE) -f ${MAKE_DIR}/preprocessed.mk -j 20 STAGE_NUMBER=00 STAGE_NAME=preprocess.training.en PREREQ_DIR=${EXPERIMENT_DIR}/00.extract_from_IBM.en
 #
 #	Remove sentence-initial W- from Arabic training files
-	$(MAKE) -f ${MAKE_DIR}/remove-all-initial-W.mk STAGE_NUMBER=01 STAGE_NAME=remove-all-initial-W.training.ar PREREQ_DIR=${EXPERIMENT_DIR}/00.preprocess.training.ar
+	$(MAKE) -f ${MAKE_DIR}/remove-all-initial-W.mk -j 20 STAGE_NUMBER=01 STAGE_NAME=remove-all-initial-W.training.ar PREREQ_DIR=${EXPERIMENT_DIR}/00.preprocess.training.ar
 
 
 extract-test-data:
@@ -104,11 +104,11 @@ extract-test-data:
 
 preprocess-test-data: extract-test-data
 #	Preprocess test files
-	$(MAKE) -f ${MAKE_DIR}/preprocess-test.mk STAGE_NUMBER=02 STAGE_NAME=preprocess.test.ar PREREQ_DIR=${EXPERIMENT_DIR}/02.extract_test_from_IBM.ar
-	$(MAKE) -f ${MAKE_DIR}/preprocess-test.mk STAGE_NUMBER=02 STAGE_NAME=preprocess.test.en PREREQ_DIR=${EXPERIMENT_DIR}/02.extract_test_from_IBM.en
+	$(MAKE) -f ${MAKE_DIR}/preprocess-test.mk -j 20 STAGE_NUMBER=02 STAGE_NAME=preprocess.test.ar PREREQ_DIR=${EXPERIMENT_DIR}/02.extract_test_from_IBM.ar
+	$(MAKE) -f ${MAKE_DIR}/preprocess-test.mk -j 20 STAGE_NUMBER=02 STAGE_NAME=preprocess.test.en PREREQ_DIR=${EXPERIMENT_DIR}/02.extract_test_from_IBM.en
 #
 #	Remove sentence-initial W- from Arabic test files
-	$(MAKE) -f ${MAKE_DIR}/remove-all-initial-W.mk STAGE_NUMBER=02 STAGE_NAME=remove-all-initial-W.test.ar PREREQ_DIR=${EXPERIMENT_DIR}/02.preprocess.test.ar
+	$(MAKE) -f ${MAKE_DIR}/remove-all-initial-W.mk -j 20 STAGE_NUMBER=02 STAGE_NAME=remove-all-initial-W.test.ar PREREQ_DIR=${EXPERIMENT_DIR}/02.preprocess.test.ar
 
 
 subsample: preprocess-training-data preprocess-test-data
