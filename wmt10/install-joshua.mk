@@ -22,7 +22,10 @@ usage:
 	$(call USAGE)
 
 # Install Joshua
-joshua: ${JOSHUA}/joshua-1.3.tgz | ${JOSHUA}
+joshua: ${JOSHUA}/bin/joshua.jar
+
+# Compile Joshua
+${JOSHUA}/bin/joshua.jar: ${JOSHUA}/joshua-1.3.tgz | ${JOSHUA}
 	tar -C ${JOSHUA} --touch --strip-components=1 -xvzf $<
 	cd ${JOSHUA} && ant
 

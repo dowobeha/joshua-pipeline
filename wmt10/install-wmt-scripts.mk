@@ -21,14 +21,14 @@ usage:
 
 
 # These files can be extracted from the tools bundle
-SCRIPTS_FILES:=${WMT_SCRIPTS}/scripts/detokenizer.perl ${WMT_SCRIPTS}/scripts/wrap-xml.perl ${WMT_SCRIPTS}/scripts/lowercase.perl ${WMT_SCRIPTS}/scripts/tokenizer.perl ${WMT_SCRIPTS}/scripts/reuse-weights.perl ${WMT_SCRIPTS}/scripts/nonbreaking_prefixes/nonbreaking_prefix.de ${WMT_SCRIPTS}/scripts/nonbreaking_prefixes/nonbreaking_prefix.en ${WMT_SCRIPTS}/scripts/nonbreaking_prefixes/nonbreaking_prefix.el
+SCRIPTS_FILES:=${WMT_SCRIPTS}/detokenizer.perl ${WMT_SCRIPTS}/wrap-xml.perl ${WMT_SCRIPTS}/lowercase.perl ${WMT_SCRIPTS}/tokenizer.perl ${WMT_SCRIPTS}/reuse-weights.perl ${WMT_SCRIPTS}/nonbreaking_prefixes/nonbreaking_prefix.de ${WMT_SCRIPTS}/nonbreaking_prefixes/nonbreaking_prefix.en ${WMT_SCRIPTS}/nonbreaking_prefixes/nonbreaking_prefix.el
 
 # Define a conveniently named target
 wmt-scripts: ${SCRIPTS_FILES}
 
 # Extract files from tools (3 KB)
 ${SCRIPTS_FILES}: ${WMT_SCRIPTS}/scripts.tgz | ${WMT_SCRIPTS}
-	tar -C ${WMT_SCRIPTS} --strip-components=1 --touch -x $(subst ${WMT_SCRIPTS}/,,$@) -vzf $<
+	tar -C ${WMT_SCRIPTS} --strip-components=1 --touch -x $(subst ${WMT_SCRIPTS}/,scripts/,$@) -vzf $<
 
 # Download tools (3 KB)
 ${WMT_SCRIPTS}/scripts.tgz : | ${WMT_SCRIPTS}

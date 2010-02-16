@@ -4,6 +4,8 @@
 PATH.TO.THIS.MAKEFILE:= $(realpath $(dir $(lastword ${MAKEFILE_LIST})))
 
 
+all: download expand joshua berkeley-aligner wmt-scripts
+
 download:
 #
 #	Download data from WMT10 web site
