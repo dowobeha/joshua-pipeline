@@ -27,7 +27,7 @@ joshua: ${JOSHUA}/bin/joshua.jar
 # Compile Joshua
 ${JOSHUA}/bin/joshua.jar: ${JOSHUA}/joshua-1.3.tgz | ${JOSHUA}
 	tar -C ${JOSHUA} --touch --strip-components=1 -xvzf $<
-	cd ${JOSHUA} && ant
+	cd ${JOSHUA} && ant jar
 
 # Download Joshua
 ${JOSHUA}/joshua-1.3.tgz: | ${JOSHUA}
