@@ -29,7 +29,7 @@ expand: training
 PARALLEL_CORPORA:=${DATA_DIR}/training/europarl-v5.de-en.de ${DATA_DIR}/training/europarl-v5.de-en.en ${DATA_DIR}/training/europarl-v5.es-en.en ${DATA_DIR}/training/europarl-v5.es-en.es ${DATA_DIR}/training/europarl-v5.fr-en.en ${DATA_DIR}/training/europarl-v5.fr-en.fr ${DATA_DIR}/training/news-commentary10.cz-en.cz ${DATA_DIR}/training/news-commentary10.cz-en.en ${DATA_DIR}/training/news-commentary10.de-en.de ${DATA_DIR}/training/news-commentary10.de-en.en ${DATA_DIR}/training/news-commentary10.es-de.de ${DATA_DIR}/training/news-commentary10.es-de.es ${DATA_DIR}/training/news-commentary10.es-en.en ${DATA_DIR}/training/news-commentary10.es-en.es ${DATA_DIR}/training/news-commentary10.fr-en.en ${DATA_DIR}/training/news-commentary10.fr-en.fr
 
 # These files can be extracted from the monolingual language model training data
-MONOLINGUAL_CORPORA:=${DATA_DIR}/training/europarl-v5.en ${DATA_DIR}/trainingeuroparl-v5.de ${DATA_DIR}/trainingeuroparl-v5.es ${DATA_DIR}/trainingeuroparl-v5.fr ${DATA_DIR}/trainingnews-commentary10.en ${DATA_DIR}/trainingnews-commentary10.cz ${DATA_DIR}/trainingnews-commentary10.fr ${DATA_DIR}/trainingnews-commentary10.de ${DATA_DIR}/training/news-commentary10.es ${DATA_DIR}/training/news.de.shuffled ${DATA_DIR}/training/news.es.shuffled ${DATA_DIR}/training/news.en.shuffled
+MONOLINGUAL_CORPORA:=${DATA_DIR}/training/europarl-v5.en ${DATA_DIR}/training/europarl-v5.de ${DATA_DIR}/training/europarl-v5.es ${DATA_DIR}/training/europarl-v5.fr ${DATA_DIR}/training/news-commentary10.en ${DATA_DIR}/training/news-commentary10.cz ${DATA_DIR}/training/news-commentary10.fr ${DATA_DIR}/training/news-commentary10.de ${DATA_DIR}/training/news-commentary10.es ${DATA_DIR}/training/news.de.shuffled ${DATA_DIR}/training/news.es.shuffled ${DATA_DIR}/training/news.en.shuffled ${DATA_DIR}/training/news.cz.shuffled
 
 # These files can be extracted from the 10^9 French-English parallel corpus
 HUGE_FR_EN_CORPUS:=${DATA_DIR}/giga-fren.release2.fr.gz ${DATA_DIR}/giga-fren.release2.en.gz
@@ -53,32 +53,32 @@ training: ${PARALLEL_CORPORA} ${MONOLINGUAL_CORPORA} ${HUGE_FR_EN_CORPUS} ${UN_F
 
 
 # Extract files from parallel corpus training data
-${PARALLEL_CORPORA}: | ${DOWNLOADS_DIR}/training-parallel.tgz ${DATA_DIR}
-	tar -x $(subst ${DATA_DIR},,$@) -vzf $<
+${PARALLEL_CORPORA}: ${DOWNLOADS_DIR}/training-parallel.tgz | ${DATA_DIR}
+	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
 
 # Extract files from 10^9 French-English corpus (2.3 GB)
-${HUGE_FR_EN_CORPUS}: | ${DOWNLOADS_DIR}/training-giga-fren.tar ${DATA_DIR}
-	wget http://www.statmt.org/wmt10/training-giga-fren.tar
+${HUGE_FR_EN_CORPUS}: ${DOWNLOADS_DIR}/training-giga-fren.tar | ${DATA_DIR}
+	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vf $<
 
 # Extract files from monolingual language model training data (5.0 GB)
-${MONOLINGUAL_CORPORA}: | ${DOWNLOADS_DIR}/training-monolingual.tgz ${DATA_DIR}
-	wget http://www.statmt.org/wmt10/training-monolingual.tgz
+${MONOLINGUAL_CORPORA}: ${DOWNLOADS_DIR}/training-monolingual.tgz | ${DATA_DIR}
+	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
 
 # Extract files from UN corpus French-English (671 MB)
-${UN_FR_EN_CORPUS}: | ${DOWNLOADS_DIR}/un.en-fr.tgz ${DATA_DIR}
-	wget http://www.statmt.org/wmt10/un.en-fr.tgz
+${UN_FR_EN_CORPUS}: ${DOWNLOADS_DIR}/un.en-fr.tgz | ${DATA_DIR}
+	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
 
 # Extract files from UN corpus Spanish-English (594 MB)
-${UN_ES_EN_CORPUS}: | ${DOWNLOADS_DIR}/un.en-es.tgz ${DATA_DIR}
-	wget http://www.statmt.org/wmt10/un.en-es.tgz
+${UN_ES_EN_CORPUS}: ${DOWNLOADS_DIR}/un.en-es.tgz | ${DATA_DIR}
+	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
 
 # Extract files from development sets (4.0 MB)
-${DEV_CORPORA}: | ${DOWNLOADS_DIR}/dev.tgz ${DATA_DIR}
-	wget http://www.statmt.org/wmt10/dev.tgz
+${DEV_CORPORA}: ${DOWNLOADS_DIR}/dev.tgz | ${DATA_DIR}
+	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
 
 # Extract files from tools (3 KB)
-${SCRIPTS_FILES}: | ${DOWNLOADS_DIR}/scripts.tgz ${DATA_DIR}
-	wget http://www.statmt.org/wmt08/scripts.tgz
+${SCRIPTS_FILES}: ${DOWNLOADS_DIR}/scripts.tgz | ${DATA_DIR}
+	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
 
 
 # If someone calls make all, do the sensible thing

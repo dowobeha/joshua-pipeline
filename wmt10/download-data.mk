@@ -26,31 +26,31 @@ downloads: ${DOWNLOADS_DIR}/training-parallel.tgz ${DOWNLOADS_DIR}/training-giga
 
 # Download parallel corpus training data (520 MB)
 ${DOWNLOADS_DIR}/training-parallel.tgz: | ${DOWNLOADS_DIR}
-	wget http://www.statmt.org/wmt10/training-parallel.tgz
+	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt10/training-parallel.tgz
 
 # Download 10^9 French-English corpus (2.3 GB)
 ${DOWNLOADS_DIR}/training-giga-fren.tar : | ${DOWNLOADS_DIR}
-	wget http://www.statmt.org/wmt10/training-giga-fren.tar
+	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt10/training-giga-fren.tar
 
 # Download monolingual language model training data (5.0 GB)
 ${DOWNLOADS_DIR}/training-monolingual.tgz : | ${DOWNLOADS_DIR}
-	wget http://www.statmt.org/wmt10/training-monolingual.tgz
+	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt10/training-monolingual.tgz
 
 # Download UN corpus French-English (671 MB)
 ${DOWNLOADS_DIR}/un.en-fr.tgz : | ${DOWNLOADS_DIR}
-	wget http://www.statmt.org/wmt10/un.en-fr.tgz
+	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt10/un.en-fr.tgz
 
 # Download UN corpus Spanish-English (594 MB)
 ${DOWNLOADS_DIR}/un.en-es.tgz : | ${DOWNLOADS_DIR}
-	wget http://www.statmt.org/wmt10/un.en-es.tgz
+	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt10/un.en-es.tgz
 
 # Download development sets (4.0 MB)
 ${DOWNLOADS_DIR}/dev.tgz : | ${DOWNLOADS_DIR}
-	wget http://www.statmt.org/wmt10/dev.tgz
+	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt10/dev.tgz
 
 # Download tools (3 KB)
 ${DOWNLOADS_DIR}/scripts.tgz : | ${DOWNLOADS_DIR}
-	wget http://www.statmt.org/wmt08/scripts.tgz
+	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt08/scripts.tgz
 
 
 # If someone calls make all, do the sensible thing
