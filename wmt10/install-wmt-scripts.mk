@@ -28,12 +28,15 @@ wmt-scripts: ${SCRIPTS_FILES}
 
 # Extract files from tools (3 KB)
 ${SCRIPTS_FILES}: ${WMT_SCRIPTS}/scripts.tgz | ${WMT_SCRIPTS}
-	tar -C ${WMT_SCRIPTS} --touch -x $(subst ${WMT_SCRIPTS}/,,$@) -vzf $<
+	tar -C ${WMT_SCRIPTS} --strip-components=1 --touch -x $(subst ${WMT_SCRIPTS}/,,$@) -vzf $<
 
 # Download tools (3 KB)
 ${WMT_SCRIPTS}/scripts.tgz : | ${WMT_SCRIPTS}
 	wget --no-verbose -P ${WMT_SCRIPTS} http://www.statmt.org/wmt08/scripts.tgz
 
+# Make directory
+${WMT_SCRIPTS}:
+	mkdir -p $@
 
 # This make file does not actually create files with the following names:
 .PHONY: usage wmt-scripts 
