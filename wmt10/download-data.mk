@@ -22,7 +22,7 @@ usage:
 	$(call USAGE)
 
 # Download all files
-downloads: ${DOWNLOADS_DIR}/training-parallel.tgz ${DOWNLOADS_DIR}/training-giga-fren.tar ${DOWNLOADS_DIR}/training-monolingual.tgz ${DOWNLOADS_DIR}/un.en-fr.tgz ${DOWNLOADS_DIR}/un.en-es.tgz ${DOWNLOADS_DIR}/dev.tgz ${DOWNLOADS_DIR}/scripts.tgz
+downloads: ${DOWNLOADS_DIR}/training-parallel.tgz ${DOWNLOADS_DIR}/training-giga-fren.tar ${DOWNLOADS_DIR}/training-monolingual.tgz ${DOWNLOADS_DIR}/un.en-fr.tgz ${DOWNLOADS_DIR}/un.en-es.tgz ${DOWNLOADS_DIR}/dev.tgz 
 
 # Download parallel corpus training data (520 MB)
 ${DOWNLOADS_DIR}/training-parallel.tgz: | ${DOWNLOADS_DIR}
