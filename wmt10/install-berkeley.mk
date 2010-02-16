@@ -21,15 +21,20 @@ BERKELEYALIGNER ?= $(call USAGE)
 usage:
 	$(call USAGE)
 
+# Define a conveniently named target
 berkeley-aligner: ${BERKELEYALIGNER}/berkeleyaligner.jar
 
+# Install Berkeley aligner
 ${BERKELEYALIGNER}/berkeleyaligner.jar: ${BERKELEYALIGNER}/berkeleyaligner_unsupervised-2.1.tar.gz | ${BERKELEYALIGNER}
 	tar -C ${BERKELEYALIGNER} --touch --strip-components=1 -x berkeleyaligner/berkeleyaligner.jar -vzf $< 
 
+# Download Berkeley aligner
 ${BERKELEYALIGNER}/berkeleyaligner_unsupervised-2.1.tar.gz: | ${BERKELEYALIGNER}
 	wget --no-verbose -P ${BERKELEYALIGNER} http://berkeleyaligner.googlecode.com/files/berkeleyaligner_unsupervised-2.1.tar.gz
 
+# Make Berkeley directory
 ${BERKELEYALIGNER}:
 	mkdir -p $@
 
+# There's not really a file called berkeley-aligner
 .PHONY: berkeley-aligner

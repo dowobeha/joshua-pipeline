@@ -48,9 +48,6 @@ ${DOWNLOADS_DIR}/un.en-es.tgz : | ${DOWNLOADS_DIR}
 ${DOWNLOADS_DIR}/dev.tgz : | ${DOWNLOADS_DIR}
 	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt10/dev.tgz
 
-# Download tools (3 KB)
-${DOWNLOADS_DIR}/scripts.tgz : | ${DOWNLOADS_DIR}
-	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt08/scripts.tgz
 
 
 # If someone calls make all, do the sensible thing

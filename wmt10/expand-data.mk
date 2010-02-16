@@ -43,8 +43,6 @@ UN_ES_EN_CORPUS:=${DATA_DIR}/undoc.2000.en-es.en ${DATA_DIR}/undoc.2000.en-es.es
 # These files can be extracted from the development set data
 DEV_CORPORA:=${DATA_DIR}/dev/newssyscomb2009-ref.cz.sgm ${DATA_DIR}/dev/newssyscomb2009-ref.de.sgm ${DATA_DIR}/dev/newssyscomb2009-ref.en.sgm ${DATA_DIR}/dev/newssyscomb2009-ref.es.sgm ${DATA_DIR}/dev/newssyscomb2009-ref.fr.sgm ${DATA_DIR}/dev/newssyscomb2009-ref.hu.sgm ${DATA_DIR}/dev/newssyscomb2009-ref.it.sgm ${DATA_DIR}/dev/newssyscomb2009-src.cz.sgm ${DATA_DIR}/dev/newssyscomb2009-src.de.sgm ${DATA_DIR}/dev/newssyscomb2009-src.en.sgm ${DATA_DIR}/dev/newssyscomb2009-src.es.sgm ${DATA_DIR}/dev/newssyscomb2009-src.fr.sgm ${DATA_DIR}/dev/newssyscomb2009-src.hu.sgm ${DATA_DIR}/dev/newssyscomb2009-src.it.sgm ${DATA_DIR}/dev/newstest2009-ref.cz.sgm ${DATA_DIR}/dev/newstest2009-ref.de.sgm ${DATA_DIR}/dev/newstest2009-ref.en.sgm ${DATA_DIR}/dev/newstest2009-ref.es.sgm ${DATA_DIR}/dev/newstest2009-ref.fr.sgm ${DATA_DIR}/dev/newstest2009-ref.hu.sgm ${DATA_DIR}/dev/newstest2009-ref.it.sgm ${DATA_DIR}/dev/newstest2009-src.cz.sgm ${DATA_DIR}/dev/newstest2009-src.de.sgm ${DATA_DIR}/dev/newstest2009-src.en.sgm ${DATA_DIR}/dev/newstest2009-src.es.sgm ${DATA_DIR}/dev/newstest2009-src.fr.sgm ${DATA_DIR}/dev/newstest2009-src.hu.sgm ${DATA_DIR}/dev/newstest2009-src.it.sgm ${DATA_DIR}/dev/newstest2009-src.xx.sgm ${DATA_DIR}/dev/news-test2008-ref.en.sgm ${DATA_DIR}/dev/news-test2008-ref.es.sgm ${DATA_DIR}/dev/news-test2008-ref.fr.sgm ${DATA_DIR}/dev/news-test2008-ref.hu.sgm ${DATA_DIR}/dev/news-test2008-src.cz.sgm ${DATA_DIR}/dev/news-test2008-src.de.sgm ${DATA_DIR}/dev/news-test2008-src.en.sgm ${DATA_DIR}/dev/news-test2008-src.es.sgm ${DATA_DIR}/dev/news-test2008-ref.cz.sgm ${DATA_DIR}/dev/news-test2008-ref.de.sgm ${DATA_DIR}/dev/news-test2008-src.fr.sgm ${DATA_DIR}/dev/news-test2008-src.hu.sgm
 
-# These files can be extracted from the tools bundle
-SCRIPTS_FILES:=${DATA_DIR}/scripts/detokenizer.perl ${DATA_DIR}/scripts/wrap-xml.perl ${DATA_DIR}/scripts/lowercase.perl ${DATA_DIR}/scripts/tokenizer.perl ${DATA_DIR}/scripts/reuse-weights.perl ${DATA_DIR}/scripts/nonbreaking_prefixes/nonbreaking_prefix.de ${DATA_DIR}/scripts/nonbreaking_prefixes/nonbreaking_prefix.en ${DATA_DIR}/scripts/nonbreaking_prefixes/nonbreaking_prefix.el
 
 
 
@@ -74,10 +72,6 @@ ${UN_ES_EN_CORPUS}: ${DOWNLOADS_DIR}/un.en-es.tgz | ${DATA_DIR}
 
 # Extract files from development sets (4.0 MB)
 ${DEV_CORPORA}: ${DOWNLOADS_DIR}/dev.tgz | ${DATA_DIR}
-	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
-
-# Extract files from tools (3 KB)
-${SCRIPTS_FILES}: ${DOWNLOADS_DIR}/scripts.tgz | ${DATA_DIR}
 	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
 
 

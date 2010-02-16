@@ -22,5 +22,9 @@ berkeley-aligner:
 #	Download and install Berkeley Aligner
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/install-berkeley.mk berkeley-aligner
 
+wmt-scripts:
+#	Download and install WMT scripts
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/install-wmt-scripts.mk wmt-scripts
 
-.PHONY: all download expand joshua
+
+.PHONY: all download expand joshua berkeley-aligner wmt-scripts
