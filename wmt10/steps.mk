@@ -4,7 +4,7 @@
 PATH.TO.THIS.MAKEFILE:= $(realpath $(dir $(lastword ${MAKEFILE_LIST})))
 
 
-all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data
+all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample
 
 download:
 #	Download data from WMT10 web site
@@ -43,5 +43,8 @@ unzip-data:
 #	Unzip compressed data
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/unzip-data.mk unzip-data
 
+subsample:
+#	Subsample training data for the test data
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/subsample.mk subsample
 
-.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data
+.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample
