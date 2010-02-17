@@ -5,7 +5,7 @@ THIS.MAKEFILE:= $(realpath $(lastword ${MAKEFILE_LIST}))
 # Define how to run this file
 define USAGE
 	$(info  )
-	$(info Usage:	make -f ${THIS.MAKEFILE} WMT_SCRIPTS=/path/to/dir downloads)
+	$(info Usage:	make -f ${THIS.MAKEFILE} WMT_SCRIPTS=/path/to/dir wmt-scripts)
 	$(info  )
 	$(error )
 endef

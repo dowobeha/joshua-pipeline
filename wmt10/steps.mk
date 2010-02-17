@@ -4,10 +4,9 @@
 PATH.TO.THIS.MAKEFILE:= $(realpath $(dir $(lastword ${MAKEFILE_LIST})))
 
 
-all: download expand joshua berkeley-aligner wmt-scripts
+all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize
 
 download:
-#
 #	Download data from WMT10 web site
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/download-data.mk downloads
 
@@ -28,5 +27,13 @@ wmt-scripts:
 #	Download and install WMT scripts
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/install-wmt-scripts.mk wmt-scripts
 
+remove-xml:
+#	Remove XML from downloaded data
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/remove-xml.mk remove-xml
 
-.PHONY: all download expand joshua berkeley-aligner wmt-scripts
+tokenize:
+#	Tokenize data
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/tokenize.mk tokenize
+
+
+.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml
