@@ -4,7 +4,7 @@
 PATH.TO.THIS.MAKEFILE:= $(realpath $(dir $(lastword ${MAKEFILE_LIST})))
 
 
-all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize
+all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize
 
 download:
 #	Download data from WMT10 web site
@@ -35,5 +35,9 @@ tokenize:
 #	Tokenize data
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/tokenize.mk tokenize
 
+normalize:
+#	Normalize data (lowercase)
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/normalize.mk normalize
 
-.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml
+
+.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize
