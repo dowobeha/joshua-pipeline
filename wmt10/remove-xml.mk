@@ -4,7 +4,7 @@ THIS.MAKEFILE:= $(realpath $(lastword ${MAKEFILE_LIST}))
 # Define how to run this file
 define USAGE
 	$(info  )
-	$(info Usage:	make -f ${THIS.MAKEFILE} DATA_DIR=/path/to/data WMT_SCRIPTS=/path/to/scripts DATA_WITHOUT_XML=/path/to/dir remove-xml)
+	$(info Usage:	make -f ${THIS.MAKEFILE} DATA_DIR=/path/to/data DATA_WITHOUT_XML=/path/to/dir remove-xml)
 	$(info  )
 	$(error )
 endef
@@ -49,10 +49,9 @@ PROCESSED_NON_XML_FILES:=$(foreach file,${NON_XML_FILES},${DATA_WITHOUT_XML}/${f
 #
 # See sections 6.6, 8.6 and 8.8 of the GNU Make Manual
 define STRIP_XML
-${DATA_WITHOUT_XML}/${1}: ${DATA_DIR}/${1}.sgm ${WMT_SCRIPTS}/strip-xml.perl | ${DATA_WITHOUT_XML}
+${DATA_WITHOUT_XML}/${1}: ${DATA_DIR}/${1}.sgm | ${DATA_WITHOUT_XML}
 	grep "<seg" ${DATA_DIR}/${1}.sgm | sed "s/[[:space:]]*<seg[^>]*>[[:space:]]*//; s/[[:space:]]*<\/seg>[[:space:]]*//" > ${DATA_WITHOUT_XML}/${1}
 endef
-#	grep "<seg" ${DATA_DIR}/${1}.sgm | perl ${WMT_SCRIPTS}/strip-xml.perl > ${DATA_WITHOUT_XML}/${1}
 
 
 # Dynamically create all of the actual rules to strip xml
