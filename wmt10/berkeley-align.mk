@@ -25,10 +25,10 @@ usage:
 	$(call USAGE)
 
 # Convenient target
-berkeley-align: ${BERKELEY_ALIGN_DIR}/training.align
+berkeley-align: ${BERKELEY_ALIGN_DIR}/alignments/training.align
 
 # Run Berkeley aligner
-${BERKELEY_ALIGN_DIR}/training.align: ${BERKELEY_ALIGN_DIR}/berkeley.aligner.config ${SUBSAMPLED_DATA}/subsampled/subsample.${SRC} ${SUBSAMPLED_DATA}/subsampled/subsample.${TGT}
+${BERKELEY_ALIGN_DIR}/alignments/training.align: ${BERKELEY_ALIGN_DIR}/berkeley.aligner.config ${SUBSAMPLED_DATA}/subsampled/subsample.${SRC} ${SUBSAMPLED_DATA}/subsampled/subsample.${TGT}
 	java ${BERKELEY_JVM_FLAGS} -jar ${BERKELEYALIGNER}/berkeleyaligner.jar ++${BERKELEY_ALIGN_DIR}/berkeley.aligner.config
 
 # Create directory
@@ -57,7 +57,7 @@ ${BERKELEY_ALIGN_DIR}/berkeley.aligner.config: | ${BERKELEY_ALIGN_DIR}
 	@echo "# Execution: Controls output and program flow" >> $@
 	@echo "###############################################" >> $@
 	@echo "" >> $@
-	@echo "execDir	${BERKELEY_ALIGN_DIR}" >> $@
+	@echo "execDir	${BERKELEY_ALIGN_DIR}/alignments" >> $@
 	@echo "create" >> $@
 	@echo "saveParams	true" >> $@
 	@echo "numThreads	${BERKELEY_NUM_THREADS}" >> $@
