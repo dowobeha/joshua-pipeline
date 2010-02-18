@@ -71,7 +71,7 @@ ${SUBSAMPLED_DATA}/subsampled/subsample.${SRC} ${SUBSAMPLED_DATA}/subsampled/sub
 		joshua.subsample.Subsampler \
 		-f ${SRC} -e ${TGT} \
 		-fpath ${SUBSAMPLER_TRAINING_DIR} -epath ${SUBSAMPLER_TRAINING_DIR} \
-		-output ${SUBSAMPLED_DATA}/subsampled \
+		-output ${SUBSAMPLED_DATA}/subsampled/subsample \
 		-ratio 1.04 \
 		-test ${SUBSAMPLED_DATA}/combined.test.${SRC} \
 		-training ${SUBSAMPLED_DATA}/manifest
