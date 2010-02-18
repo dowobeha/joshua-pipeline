@@ -4,7 +4,7 @@
 PATH.TO.THIS.MAKEFILE:= $(realpath $(dir $(lastword ${MAKEFILE_LIST})))
 
 
-all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample
+all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align
 
 download:
 #	Download data from WMT10 web site
@@ -47,4 +47,8 @@ subsample:
 #	Subsample training data for the test data
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/subsample.mk subsample
 
-.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample
+berkeley-align:
+#	Word alignment using Berkeley aligner
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/berkeley-align.mk berkeley-align
+
+.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align
