@@ -75,7 +75,7 @@ ${BERKELEY_ALIGN_DIR}/berkeley.aligner.config: | ${BERKELEY_ALIGN_DIR}
 	@echo "testSources	/dev/null" >> $@
 	@echo "" >> $@
 	@echo "# Choose the training sources, which can either be directories or files that list files/directories" >> $@
-	@echo "trainSources	${SUBSAMPLED_DATA}" >> $@
+	@echo "trainSources	${SUBSAMPLED_DATA}/subsampled" >> $@
 	@echo "sentences	MAX" >> $@
 	@echo "" >> $@
 	@echo "#################" >> $@
