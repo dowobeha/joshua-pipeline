@@ -1,14 +1,89 @@
+################################################################################
+################################################################################
+####                                                                        ####
+####         Define where and how to run the WMT10 translation pipeline     #### 
+####                                                                        ####
+################################################################################
+################################################################################
 
+# Contents:
+#
+# 1) Perform some minor but necessary housekeeping details
+# 2) Define directories for each step in the translation pipeline
+# 3) Define steps to run the translation pipeline
+
+
+################################################################################
+#          Perform some minor but necessary housekeeping details               #
+################################################################################
+
+# Inform user what they are running
+$(info Translation pipeline for ${SRC}-${TGT})
 
 # Calculate the full path to this make file
-PATH.TO.THIS.MAKEFILE:= $(realpath $(dir $(lastword ${MAKEFILE_LIST})))
+PATH.TO.THIS.MAKEFILE:=$(realpath $(dir $(lastword ${MAKEFILE_LIST})))
+
+# Require that the user defines the EXPERIMENT_DIR
+EXPERIMENT_DIR ?= $(error The EXPERIMENT_DIR variable must be defined, but currently is not defined.)
 
 
-all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align
+
+################################################################################
+#          Define directories for each step in the translation pipeline        #
+################################################################################
+
+# Define directory to save downloaded data
+export DOWNLOADS_DIR=${EXPERIMENT_DIR}/001.OriginalData
+
+# Define directory to expand downloaded data
+export DATA_DIR=${EXPERIMENT_DIR}/002.OriginalData
+
+# Define directory where Joshua will be located
+export JOSHUA=${EXPERIMENT_DIR}/003.Joshua
+
+# Define directory where Berkeley Aligner will be located
+export BERKELEYALIGNER=${EXPERIMENT_DIR}/004.BerkeleyAligner
+
+# Define directory where WMT scripts will be located
+export WMT_SCRIPTS=${EXPERIMENT_DIR}/005.Scripts
+
+# Define directory where data stripped of XML will be located
+export DATA_WITHOUT_XML=${EXPERIMENT_DIR}/006.RemoveXML
+
+# Define directory where tokenized data will be located
+export TOKENIZED_DATA=${EXPERIMENT_DIR}/007.TokenizedData
+
+# Define directory where normalized data will be located
+export NORMALIZED_DATA=${EXPERIMENT_DIR}/008.NormalizedData
+
+# Define directory where unzipped data will be located
+export UNZIPPED_DATA=${EXPERIMENT_DIR}/009.UnzippedData
+
+# Define directory where subsampler results will be located
+export SUBSAMPLED_DATA=${EXPERIMENT_DIR}/010.Subsample.${SRC}-${TGT}
+
+# Define directory where Berkeley aligner results will be located
+export BERKELEY_ALIGN_DIR=${EXPERIMENT_DIR}/011.BerkeleyAlign.${SRC}-${TGT}
+
+# Define directory where rule extraction results will be located
+export EXTRACT_RULES_DIR=${EXPERIMENT_DIR}/012.ExtractGrammar.${SRC}-${TGT}
+
+
+
+
+################################################################################
+#          Define steps to run the translation pipeline                        #
+################################################################################
+
+# Declare how to run all steps of this experiment
+all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar
+
 
 download:
 #	Download data from WMT10 web site
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/download-data.mk downloads
+
+
 
 expand:
 #	Expand compressed data from WMT10 web site
@@ -51,4 +126,9 @@ berkeley-align:
 #	Word alignment using Berkeley aligner
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/berkeley-align.mk berkeley-align
 
-.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align
+extract-grammar:
+#	Extract synchronous context-free translation grammar
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/extract-grammar.mk extract-grammar
+
+
+.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar
