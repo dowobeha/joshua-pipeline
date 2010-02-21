@@ -32,6 +32,10 @@ EXPERIMENT_DIR ?= $(error The EXPERIMENT_DIR variable must be defined, but curre
 #          Define directories for each step in the translation pipeline        #
 ################################################################################
 
+# Define directory where log files will be located
+export LOG_FILES_DIR=${EXPERIMENT_DIR}/999.logs
+
+
 # Define directory to save downloaded data
 export DOWNLOADS_DIR=${EXPERIMENT_DIR}/001.OriginalData
 
@@ -70,7 +74,6 @@ export EXTRACT_RULES_DIR=${EXPERIMENT_DIR}/012.ExtractGrammar.${SRC}-${TGT}
 
 
 
-
 ################################################################################
 #          Define steps to run the translation pipeline                        #
 ################################################################################
@@ -81,14 +84,11 @@ all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize nor
 
 download:
 #	Download data from WMT10 web site
-	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/download-data.mk downloads
-
-
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/download-data.mk downloads 
 
 expand:
 #	Expand compressed data from WMT10 web site
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/expand-data.mk expand
-
 
 joshua:
 #	Download and compile Joshua

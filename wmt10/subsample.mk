@@ -48,22 +48,13 @@ SUBSAMPLER_TEST_SRC_FILES:=$(foreach file,${FILES_TO_TRANSLATE},${SUBSAMPLER_TES
 ${SUBSAMPLED_DATA}/combined.test.${SRC}: ${SUBSAMPLER_TEST_SRC_FILES} | ${SUBSAMPLED_DATA}
 	cat $^ > $@
 
-# Download Moses to get filter script
-${SUBSAMPLED_DATA}/moses-2009-04-13.tgz: | ${SUBSAMPLED_DATA}
-	wget --no-verbose -P ${SUBSAMPLED_DATA} http://downloads.sourceforge.net/project/mosesdecoder/mosesdecoder/2009-04-13/moses-2009-04-13.tgz
-
-# Extract filter script from Moses tarball
-${SUBSAMPLED_DATA}/clean-corpus-n.perl: ${SUBSAMPLED_DATA}/moses-2009-04-13.tgz | ${SUBSAMPLED_DATA}
-	tar -C ${SUBSAMPLED_DATA} --touch --strip-components=3 -x trunk/scripts/training/clean-corpus-n.perl -vzf $<
-	chmod ug+x $@
-
 # Define convenience target for running everything
 subsample: ${SUBSAMPLED_DATA}/subsampled/subsample.${SRC} ${SUBSAMPLED_DATA}/subsampled/subsample.${TGT}
 
 
 # Define target to remove training lines with zero words on at least one side and those with 100+ words on at least one side
-${SUBSAMPLER_TRAINING_DIR}/%.${SRC} ${SUBSAMPLER_TRAINING_DIR}/%.${TGT}: ${UNZIPPED_DATA}/%.${SRC} ${UNZIPPED_DATA}/%.${TGT} ${SUBSAMPLED_DATA}/clean-corpus-n.perl | ${SUBSAMPLER_TRAINING_DIR}
-	${SUBSAMPLED_DATA}/clean-corpus-n.perl ${UNZIPPED_DATA}/$* ${SRC} ${TGT} ${SUBSAMPLER_TRAINING_DIR}/$* 1 99 
+${SUBSAMPLER_TRAINING_DIR}/%.${SRC} ${SUBSAMPLER_TRAINING_DIR}/%.${TGT}: ${UNZIPPED_DATA}/%.${SRC} ${UNZIPPED_DATA}/%.${TGT} ${THIS.MAKEFILE.DIR}/filter-sentences.pl | ${SUBSAMPLER_TRAINING_DIR}
+	${THIS.MAKEFILE.DIR}/filter-sentences.pl ${UNZIPPED_DATA}/$*.${SRC} ${UNZIPPED_DATA}/$*.${TGT} ${SUBSAMPLER_TRAINING_DIR}/$*.${SRC} ${SUBSAMPLER_TRAINING_DIR}/$*.${TGT}
 
 # Define target to copy files to translate to subsampler dir
 ${SUBSAMPLER_TEST_DIR}/%: ${UNZIPPED_DATA}/% | ${SUBSAMPLER_TEST_DIR}
