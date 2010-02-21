@@ -11,7 +11,7 @@
 export SUBSAMPLER_JVM_FLAGS=-Xms30g -Xmx30g -Dfile.encoding=utf8
 
 # Define number of threads for Berkeley aligner
-export BERKELEY_NUM_THREADS=20
+export BERKELEY_NUM_THREADS=10
 
 export BERKELEY_JVM_FLAGS=-d64 -Dfile.encoding=utf8 -XX:MinHeapFreeRatio=10 -Xms25g -Xmx25g
 

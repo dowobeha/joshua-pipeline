@@ -61,6 +61,7 @@ ${BERKELEY_ALIGN_DIR}/berkeley.aligner.config: | ${BERKELEY_ALIGN_DIR}
 	@echo "create" >> $@
 	@echo "saveParams	true" >> $@
 	@echo "numThreads	${BERKELEY_NUM_THREADS}" >> $@
+	@echo "safeConcurrency" >> $@
 	@echo "msPerLine	10000" >> $@
 	@echo "alignTraining" >> $@
 	@echo "" >> $@
