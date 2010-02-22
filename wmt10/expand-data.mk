@@ -60,7 +60,7 @@ ${HUGE_FR_EN_CORPUS}: ${DOWNLOADS_DIR}/training-giga-fren.tar | ${DATA_DIR}
 
 # Extract files from monolingual language model training data (5.0 GB)
 ${MONOLINGUAL_CORPORA}: ${DOWNLOADS_DIR}/training-monolingual.tgz | ${DATA_DIR}
-	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,training/,$@) -vzf $<
+	tar -C ${DATA_DIR} --touch --strip-components=1 -x $(subst ${DATA_DIR}/,training/,$@) -vzf $<
 
 # Extract files from UN corpus French-English (671 MB)
 ${UN_FR_EN_CORPUS}: ${DOWNLOADS_DIR}/un.en-fr.tgz | ${DATA_DIR}
