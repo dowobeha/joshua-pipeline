@@ -4,7 +4,7 @@ THIS.MAKEFILE:= $(realpath $(lastword ${MAKEFILE_LIST}))
 # Define how to run this file
 define USAGE
 	$(info  )
-	$(info Usage:	make -f ${THIS.MAKEFILE} SRILM_NGRAM_COUNT=/path/to/ngram-count TGT=tgtlang LM_TRAINING_DIR=/path/to/data LM_TRAINING_FILE_NAMES=fileNamesWithoutPath TRAINED_LM_DIR=/path/to/output trainLM)
+	$(info Usage:	make -f ${THIS.MAKEFILE} SRILM_NGRAM_COUNT=/path/to/ngram-count TGT=tgtlang LM_TRAINING_DIR=/path/to/data LM_TRAINING_FILE_NAMES=fileNamesWithoutPath LM_NGRAM_ORDER=n TRAINED_LM_DIR=/path/to/output trainLM)
 	$(info  )
 	$(error )
 endef
@@ -16,6 +16,7 @@ SRILM_NGRAM_COUNT ?= $(call USAGE)
 TGT ?= $(call USAGE)
 LM_TRAINING_DIR ?= $(call USAGE)
 LM_TRAINING_FILE_NAMES ?= $(call USAGE)
+LM_NGRAM_ORDER ?= $(call USAGE)
 TRAINED_LM_DIR ?= $(call USAGE)
 
 # If the user does not specify a target, print out how to run this file
@@ -31,7 +32,7 @@ build-lm: ${TRAINED_LM_DIR}/${TGT}.lm
 
 # Build language model
 ${TRAINED_LM_DIR}/${TGT}.lm: ${TRAINED_LM_DIR}/monolingual.${TGT} | ${SRILM_NGRAM_COUNT} ${TRAINED_LM_DIR}
-	${SRILM_NGRAM_COUNT} -order 5 -interpolate -kndiscount -text $< -lm $@
+	${SRILM_NGRAM_COUNT} -order ${LM_NGRAM_ORDER} -interpolate -kndiscount -text $< -lm $@
 
 # Concatenate the monolingual training files
 ${TRAINED_LM_DIR}/monolingual.${TGT}: ${LM_TRAINING_FILES} ${TRAINED_LM_DIR}/monolingual.${TGT}.manifest | ${TRAINED_LM_DIR}

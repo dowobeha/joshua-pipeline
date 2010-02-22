@@ -77,6 +77,9 @@ export LM_TRAINING_DIR=${EXPERIMENT_DIR}/009.UnzippedData
 # Define directory where language model will be located
 export TRAINED_LM_DIR=${EXPERIMENT_DIR}/013.LanguageModel.${TGT}
 
+# Define directory where MERT runs will be located
+export MERT_DIR=${EXPERIMENT_DIR}/014.MERT.${MERT_METRIC_NAME}.${SRC}-${TGT}
+
 
 ################################################################################
 #          Define steps to run the translation pipeline                        #

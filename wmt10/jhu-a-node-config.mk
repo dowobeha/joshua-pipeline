@@ -24,6 +24,16 @@ export SRILM=/home/zli/tools/srilm1.5.7.64bit.pic
 export SRILM_NGRAM_COUNT=${SRILM}/bin/i686-m64/ngram-count
 
 
+export LM_NGRAM_ORDER=5
+
+export JOSHUA_THREADS=20
+
+export JOSHUA_MAX_N_ITEMS=100
+
+export JOSHUA_MEMORY_FLAGS=-d64 -Dfile.encoding=utf8 -XX:MinHeapFreeRatio=10 -Xms50g -Xmx50g
+
+export MERT_JVM_FLAGS=-d64 -Dfile.encoding=utf8 -Xms2g -Xmx2g
+
 # Define where this experiment will be run
 export EXPERIMENT_DIR=/mnt/data/wmt10
 
