@@ -15,6 +15,7 @@ endef
 SRC ?= $(call USAGE)
 TGT ?= $(call USAGE)
 JOSHUA ?= $(call USAGE)
+MERT_INPUT_DIR ?= $(call USAGE)
 MERT_FILE_TO_TRANSLATE ?= $(call USAGE)
 MERT_REFERENCE_BASE ?= $(call USAGE)
 MERT_NUM_REFERENCES ?= $(call USAGE)
@@ -27,6 +28,8 @@ JOSHUA_THREADS ?= $(call USAGE)
 JOSHUA_MEMORY_FLAGS ?= $(call USAGE)
 MERT_JVM_FLAGS ?= $(call USAGE)
 
+MERT_REQUIRED_JARS:=${JOSHUA}/bin/joshua.jar
+
 # Translate the human-readable metric name (bleu or ter_bleu)
 #   into a Z-MERT-readable metric configuration
 #   or throw an error if the metric name is ill-defined.
@@ -34,7 +37,8 @@ ifeq (${MERT_METRIC_NAME},bleu)
 MERT_METRIC:=BLEU 4 closest
 else ifeq (${MERT_METRIC_NAME},ter_bleu)
 MERT_METRIC:=TER-BLEU nocase punc 20 50 ${MERT_DIR}/tercom.7.25.jar 6 4 closest
-${MERT_DIR}/joshua.config.ZMERT.final ${MERT_DIR}/mert.config: ${MERT_DIR}/tercom.7.25.jar
+MERT_REQUIRED_JARS += ${MERT_DIR}/tercom.7.25.jar
+#${MERT_DIR}/joshua.config.ZMERT.final ${MERT_DIR}/mert.config: ${MERT_DIR}/tercom.7.25.jar
 else
 MERT_METRIC:=$(error MERT_METRIC_NAME must be set to bleu or ter_bleu)
 endif
@@ -44,8 +48,10 @@ endif
 usage:
 	$(call USAGE)
 
+mert: ${MERT_DIR}/joshua.config.ZMERT.final
+
 # Define how to create a tuned Joshua configuration using Z-MERT
-${MERT_DIR}/joshua.config.ZMERT.final: ${JOSHUA}/bin/joshua.jar ${MERT_DIR}/mert.params ${MERT_DIR}/mert.config ${MERT_DIR}/joshua.config ${MERT_DIR}/decoder.command | ${MERT_DIR}
+${MERT_DIR}/joshua.config.ZMERT.final: ${MERT_REQUIRED_JARS} ${MERT_DIR}/mert.params ${MERT_DIR}/mert.config ${MERT_DIR}/joshua.config ${MERT_DIR}/decoder.command | ${MERT_DIR}
 	java ${MERT_JVM_FLAGS} -cp ${JOSHUA}/bin/joshua.jar joshua.zmert.ZMERT ${MERT_DIR}/mert.config &> ${MERT_DIR}/mert.out.log
 
 # Define MERT parameters
@@ -60,8 +66,8 @@ ${MERT_DIR}/mert.params: | ${MERT_DIR}
 
 # Configure MERT
 ${MERT_DIR}/mert.config: | ${MERT_DIR}
-	@echo "-s	${MERT_FILE_TO_TRANSLATE}		# source sentences file name" > $@
-	@echo "-r	${MERT_REFERENCE_BASE}		# target sentences file name or file name prefix, if multiple references" >> $@
+	@echo "-s	${MERT_INPUT_DIR}/${MERT_FILE_TO_TRANSLATE}		# source sentences file name" > $@
+	@echo "-r	${MERT_INPUT_DIR}/${MERT_REFERENCE_BASE}		# target sentences file name or file name prefix, if multiple references" >> $@
 	@echo "-rps	${MERT_NUM_REFERENCES}		# references per sentence" >> $@
 	@echo "-p	${MERT_DIR}/mert.params		# mert parameter definitions file" >> $@
 	@echo "-m	${MERT_METRIC}		# evaluation metric and its options" >> $@
@@ -141,10 +147,10 @@ ${MERT_DIR}/joshua.config: | ${MERT_DIR}
 	@echo "wordpenalty -2.844814" >> $@
 
 
-${MERT_DIR}/decoder.command: ${JOSHUA}/bin/joshua.jar ${MERT_DIR}/joshua.config | ${MERT_DIR}
+${MERT_DIR}/decoder.command: ${MERT_REQUIRED_JARS} ${MERT_DIR}/joshua.config | ${MERT_DIR}
 	@echo "#!/bin/bash" > $@
 	@echo "" >> $@
-	@echo "java ${JOSHUA_MEMORY_FLAGS} -cp ${JOSHUA}/bin/joshua.jar -Djava.library.path=${JOSHUA}/lib -Dfile.encoding=utf8 joshua.decoder.JoshuaDecoder ${MERT_DIR}/joshua.config ${MERT_FILE_TO_TRANSLATE} ${MERT_DIR}/nbest.out" >> $@
+	@echo "java ${JOSHUA_MEMORY_FLAGS} -cp ${JOSHUA}/bin/joshua.jar -Djava.library.path=${JOSHUA}/lib -Dfile.encoding=utf8 joshua.decoder.JoshuaDecoder ${MERT_DIR}/joshua.config ${MERT_INPUT_DIR}/${MERT_FILE_TO_TRANSLATE} ${MERT_DIR}/nbest.out" >> $@
 	chmod ug+x $@
 
 # Download TER
@@ -158,3 +164,5 @@ ${MERT_DIR}/tercom.7.25.jar: ${MERT_DIR}/tercom-0.7.25.tgz | ${MERT_DIR}
 # Create directory
 ${MERT_DIR}:
 	mkdir -p $@
+
+.PHONY: usage mert

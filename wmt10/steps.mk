@@ -77,6 +77,8 @@ export LM_TRAINING_DIR=${EXPERIMENT_DIR}/009.UnzippedData
 # Define directory where language model will be located
 export TRAINED_LM_DIR=${EXPERIMENT_DIR}/013.LanguageModel.${TGT}
 
+# Define input dir for MERT data
+export MERT_INPUT_DIR=${EXPERIMENT_DIR}/009.UnzippedData
 # Define directory where MERT runs will be located
 export MERT_DIR=${EXPERIMENT_DIR}/014.MERT.${MERT_METRIC_NAME}.${SRC}-${TGT}
 
@@ -86,7 +88,7 @@ export MERT_DIR=${EXPERIMENT_DIR}/014.MERT.${MERT_METRIC_NAME}.${SRC}-${TGT}
 ################################################################################
 
 # Declare how to run all steps of this experiment
-all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar build-lm
+all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar build-lm mert
 
 
 download:
@@ -141,4 +143,8 @@ build-lm:
 #	Build language model
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/build-language-model.mk build-lm
 
-.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar build-lm
+mert:
+#	Run minimum error rate training
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/mert.mk mert
+
+.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar build-lm mert
