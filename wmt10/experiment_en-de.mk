@@ -22,15 +22,8 @@ export FILES_TO_TRANSLATE=newssyscomb2009-src.${SRC} news-test2008-src.${SRC}
 # Define monolingual target language files to use for training language model
 export LM_TRAINING_FILE_NAMES=europarl-v5.${TGT} news-commentary10.${TGT} news.${TGT}.shuffled
 
-# Define file to translate during MERT
-export MERT_FILE_TO_TRANSLATE=news-test2008-src.${SRC}
-
-# Define file to use as reference during MERT
-export MERT_REFERENCE_BASE=news-test2008-src.${TGT}
-
-export MERT_METRIC_NAME=bleu
-
-export MERT_NUM_REFERENCES=1
+# Define files and settings for running MERT
+include ${PATH.TO.THIS.MAKEFILE}/wmt10-mert-config.mk
 
 # Calculate the full path to this make file
 PATH.TO.THIS.MAKEFILE:=$(realpath $(dir $(lastword ${MAKEFILE_LIST})))
