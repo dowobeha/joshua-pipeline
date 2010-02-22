@@ -20,7 +20,8 @@ export EXTRACT_RULES_JVM_FLAGS="-Xms30g -Xmx30g"
 # Define directory where SRILM is installed
 export SRILM=/home/zli/tools/srilm1.5.7.64bit.pic
 
-
+# Define file where SRILM ngram-count is installed
+export SRILM_NGRAM_COUNT=${SRILM}/bin/i686-m64/ngram-count
 
 
 # Define where this experiment will be run

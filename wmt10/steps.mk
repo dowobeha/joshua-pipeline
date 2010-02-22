@@ -72,6 +72,10 @@ export BERKELEY_ALIGN_DIR=${EXPERIMENT_DIR}/011.BerkeleyAlign.${SRC}-${TGT}
 # Define directory where rule extraction results will be located
 export EXTRACT_RULES_DIR=${EXPERIMENT_DIR}/012.ExtractGrammar.${SRC}-${TGT}
 
+# Define input for language model
+export LM_TRAINING_DIR=${EXPERIMENT_DIR}/009.UnzippedData
+# Define directory where language model will be located
+export TRAINED_LM_DIR=${EXPERIMENT_DIR}/013.LanguageModel.${TGT}
 
 
 ################################################################################
@@ -79,7 +83,7 @@ export EXTRACT_RULES_DIR=${EXPERIMENT_DIR}/012.ExtractGrammar.${SRC}-${TGT}
 ################################################################################
 
 # Declare how to run all steps of this experiment
-all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar
+all: download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar build-lm
 
 
 download:
@@ -130,5 +134,8 @@ extract-grammar:
 #	Extract synchronous context-free translation grammar
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/extract-grammar.mk extract-grammar
 
+build-lm:
+#	Build language model
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/build-language-model.mk build-lm
 
-.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar
+.PHONY: all download expand joshua berkeley-aligner wmt-scripts remove-xml tokenize normalize unzip-data subsample berkeley-align extract-grammar build-lm
