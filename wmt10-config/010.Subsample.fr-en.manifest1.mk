@@ -29,6 +29,8 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ################################################################################
 ####                    Define any required variables:                      ####
 ####                                                                        ####
+export SRC:=fr
+export TGT:=en
 export SUBSAMPLER_MANIFEST:=news-commentary10.fr-en europarl-v5.fr-en giga-fren.release2 undoc.2000.en-fr
 ####                                                                        ####
 ################################################################################

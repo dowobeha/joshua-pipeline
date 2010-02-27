@@ -29,7 +29,7 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ################################################################################
 ####                    Define any required variables:                      ####
 ####                                                                        ####
-UNZIPPED_DATA:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
+export UNZIPPED_DATA:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ####                                                                        ####
 ################################################################################
 

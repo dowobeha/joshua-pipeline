@@ -30,7 +30,7 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ################################################################################
 ####                    Define any required variables:                      ####
 ####                                                                        ####
-export FILTER_SCRIPT:=${EXPERIMENT_MAKE_DIR}/strip.perl
+export FILTER_SCRIPT:=${EXPERIMENT_MAKE_DIR}/filter-sentences.pl
 export SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 ####                                                                        ####
 ################################################################################
@@ -39,6 +39,7 @@ export SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
+include ${PATH.TO.THIS.MAKEFILE}/003.Joshua.mk
 include ${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk
 ####                                                                        ####
 ################################################################################

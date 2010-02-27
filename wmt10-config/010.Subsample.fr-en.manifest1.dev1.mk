@@ -29,7 +29,11 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ################################################################################
 ####                    Define any required variables:                      ####
 ####                                                                        ####
-export FILES_TO_TRANSLATE:=newssyscomb2009-src.fr news-test2008-src.fr
+export SUBSAMPLED_DATA:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
+export SRC:=fr
+export TGT:=en
+export FILES_TO_TRANSLATE:=newssyscomb2009-src.${SRC} news-test2008-src.${SRC}
+export SUBSAMPLER_MANIFEST:=news-commentary10.fr-en europarl-v5.fr-en giga-fren.release2 undoc.2000.en-fr
 ####                                                                        ####
 ################################################################################
 
@@ -37,7 +41,7 @@ export FILES_TO_TRANSLATE:=newssyscomb2009-src.fr news-test2008-src.fr
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/010.Subsample.fr-en.manifest1.mk
+include ${PATH.TO.THIS.MAKEFILE}/010.Subsample.mk
 ####                                                                        ####
 ################################################################################
 
