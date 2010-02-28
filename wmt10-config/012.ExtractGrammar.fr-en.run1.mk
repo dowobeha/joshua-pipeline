@@ -1,8 +1,7 @@
 ################################################################################
 ####            Define the purpose of this experimental step:               ####
 ####                                                                        ####
-#### This step defines the general steps of running subsampling,
-####    without specifying the subsampling parameters or the language pair  
+#### This step extracts a grammar
 ####                                                                        ####
 ################################################################################
 
@@ -30,8 +29,8 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ################################################################################
 ####                    Define any required variables:                      ####
 ####                                                                        ####
-export FILTER_SCRIPT:=${EXPERIMENT_MAKE_DIR}/filter-sentences.pl
-export SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
+export EXTRACT_RULES_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
+export EXTRACT_RULES_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 ####                                                                        ####
 ################################################################################
 
@@ -39,8 +38,7 @@ export SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/003.Joshua.mk
-include ${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk
+include ${PATH.TO.THIS.MAKEFILE}/011.BerkeleyAlign.fr-en.run1.mk
 ####                                                                        ####
 ################################################################################
 
@@ -48,7 +46,7 @@ include ${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk
 ################################################################################
 ####                     Define the target to be run:                       ####
 ####                                                                        ####
-export .DEFAULT_GOAL=subsample
+export .DEFAULT_GOAL=extract-grammar
 ####                                                                        ####
 ################################################################################
 
@@ -56,6 +54,6 @@ export .DEFAULT_GOAL=subsample
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/subsample.mk
+include ${EXPERIMENT_MAKE_DIR}/extract-grammar.mk
 ####                                                                        ####
 ################################################################################

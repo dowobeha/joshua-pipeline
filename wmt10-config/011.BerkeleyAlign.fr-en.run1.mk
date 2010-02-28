@@ -1,7 +1,7 @@
 ################################################################################
 ####            Define the purpose of this experimental step:               ####
 ####                                                                        ####
-#### This step defines the test data to be used during subsampling
+#### This step runs the Berkeley aligner
 ####                                                                        ####
 ################################################################################
 
@@ -29,13 +29,9 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ################################################################################
 ####                    Define any required variables:                      ####
 ####                                                                        ####
-export SUBSAMPLED_DATA:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
-export SRC:=fr
-export TGT:=en
-export FILES_TO_TRANSLATE:=newssyscomb2009-src.${SRC} news-test2008-src.${SRC}
-export SUBSAMPLER_MANIFEST:=news-commentary10.fr-en europarl-v5.fr-en giga-fren.release2 undoc.2000.en-fr
-export FILTER_SCRIPT:=${EXPERIMENT_MAKE_DIR}/filter-sentences.pl
-export SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
+export BERKELEY_NUM_THREADS:=10
+export BERKELEY_JVM_FLAGS:=-d64 -Dfile.encoding=utf8 -XX:MinHeapFreeRatio=10 -Xms25g -Xmx25g
+export BERKELEY_ALIGN_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ####                                                                        ####
 ################################################################################
 
@@ -43,8 +39,8 @@ export SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/003.Joshua.mk
-include ${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk
+include ${PATH.TO.THIS.MAKEFILE}/004.BerkeleyAligner.mk
+include ${PATH.TO.THIS.MAKEFILE}/010.Subsample.fr-en.run1.mk
 ####                                                                        ####
 ################################################################################
 
@@ -52,7 +48,7 @@ include ${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk
 ################################################################################
 ####                     Define the target to be run:                       ####
 ####                                                                        ####
-export .DEFAULT_GOAL=subsample
+export .DEFAULT_GOAL=berkeley-align
 ####                                                                        ####
 ################################################################################
 
@@ -60,6 +56,6 @@ export .DEFAULT_GOAL=subsample
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/subsample.mk
+include ${EXPERIMENT_MAKE_DIR}/berkeley-align.mk
 ####                                                                        ####
 ################################################################################
