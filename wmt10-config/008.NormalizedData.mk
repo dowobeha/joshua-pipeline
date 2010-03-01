@@ -37,7 +37,7 @@ NORMALIZED_DATA:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/007.TokenizedData.mk
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/007.TokenizedData.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -53,6 +53,6 @@ export .DEFAULT_GOAL=normalize
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/normalize.mk
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/normalize.mk))
 ####                                                                        ####
 ################################################################################

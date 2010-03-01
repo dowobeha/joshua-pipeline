@@ -1,16 +1,7 @@
 ################################################################################
-################################################################################
-####                                                                        ####
-####       Configuration file defining how to run an experimental step      ####
-####                                                                        ####
-################################################################################
-################################################################################
-
-
-################################################################################
 ####            Define the purpose of this experimental step:               ####
 ####                                                                        ####
-#### This step downloads compressed corpus data
+#### This step runs MERT
 ####                                                                        ####
 ################################################################################
 
@@ -36,18 +27,34 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 
 
 ################################################################################
-####                     Define the target to be run:                       ####
-####                                                                        ####
-export .DEFAULT_GOAL=downloads
-####                                                                        ####
-################################################################################
-
-
-################################################################################
 ####                    Define any required variables:                      ####
 ####                                                                        ####
-#### Define directory to save downloaded data
-export DOWNLOADS_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
+export SRC:=fr
+export TGT:=en
+export MERT_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
+export MERT_INPUT_DIR:=${EXPERIMENT_DIR}/009.UnzippedData
+export MERT_FILE_TO_TRANSLATE:=news-test2008-src.${SRC}
+export MERT_REFERENCE_BASE:=news-test2008-src.${TGT}
+export MERT_NUM_REFERENCES:=1
+export MERT_METRIC_NAME:=bleu
+export MERT_JVM_FLAGS:=-d64 -Dfile.encoding=utf8 -Xms2g -Xmx2g -Dfile.encoding=utf8
+####                                                                        ####
+################################################################################
+
+
+################################################################################
+####                Import any immediate prerequisite steps:                ####
+####                                                                        ####
+include ${PATH.TO.THIS.MAKEFILE}/012.ExtractGrammar.fr-en.run1.mk
+include ${PATH.TO.THIS.MAKEFILE}/013.LanguageModel.en.run1.mk
+####                                                                        ####
+################################################################################
+
+
+################################################################################
+####                     Define the target to be run:                       ####
+####                                                                        ####
+export .DEFAULT_GOAL=mert
 ####                                                                        ####
 ################################################################################
 
@@ -55,8 +62,6 @@ export DOWNLOADS_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-$(eval $(call import,${EXPERIMENT_MAKE_DIR}/download-data.mk))
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/mert.mk))
 ####                                                                        ####
 ################################################################################
-
-

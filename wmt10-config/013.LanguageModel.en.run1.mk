@@ -1,16 +1,7 @@
 ################################################################################
-################################################################################
-####                                                                        ####
-####       Configuration file defining how to run an experimental step      ####
-####                                                                        ####
-################################################################################
-################################################################################
-
-
-################################################################################
 ####            Define the purpose of this experimental step:               ####
 ####                                                                        ####
-#### This step downloads compressed corpus data
+#### This step builds a language model 
 ####                                                                        ####
 ################################################################################
 
@@ -36,18 +27,30 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 
 
 ################################################################################
-####                     Define the target to be run:                       ####
-####                                                                        ####
-export .DEFAULT_GOAL=downloads
-####                                                                        ####
-################################################################################
-
-
-################################################################################
 ####                    Define any required variables:                      ####
 ####                                                                        ####
-#### Define directory to save downloaded data
-export DOWNLOADS_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
+export TRAINED_LM_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
+export SRILM_NGRAM_COUNT:=${SRILM}/bin/i686-m64/ngram-count
+export LM_TRAINING_DIR:=${EXPERIMENT_DIR}/009.UnzippedData
+export LM_NGRAM_ORDER:=5
+export TGT:=en
+export LM_TRAINING_FILE_NAMES:=europarl-v5.${TGT} news-commentary10.${TGT} news.${TGT}.shuffled undoc.2000.en-fr.${TGT} giga-fren.release2.${TGT}
+####                                                                        ####
+################################################################################
+
+
+################################################################################
+####                Import any immediate prerequisite steps:                ####
+####                                                                        ####
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk))
+####                                                                        ####
+################################################################################
+
+
+################################################################################
+####                     Define the target to be run:                       ####
+####                                                                        ####
+export .DEFAULT_GOAL=build-lm
 ####                                                                        ####
 ################################################################################
 
@@ -55,8 +58,6 @@ export DOWNLOADS_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-$(eval $(call import,${EXPERIMENT_MAKE_DIR}/download-data.mk))
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/build-language-model.mk))
 ####                                                                        ####
 ################################################################################
-
-

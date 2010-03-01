@@ -38,7 +38,7 @@ export EXTRACT_RULES_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/011.BerkeleyAlign.fr-en.run1.mk
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/011.BerkeleyAlign.fr-en.run1.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -54,6 +54,6 @@ export .DEFAULT_GOAL=extract-grammar
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/extract-grammar.mk
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/extract-grammar.mk))
 ####                                                                        ####
 ################################################################################

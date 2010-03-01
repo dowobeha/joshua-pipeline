@@ -39,8 +39,8 @@ export BERKELEY_ALIGN_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/004.BerkeleyAligner.mk
-include ${PATH.TO.THIS.MAKEFILE}/010.Subsample.fr-en.run1.mk
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/004.BerkeleyAligner.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/010.Subsample.fr-en.run1.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -56,6 +56,6 @@ export .DEFAULT_GOAL=berkeley-align
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/berkeley-align.mk
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/berkeley-align.mk))
 ####                                                                        ####
 ################################################################################

@@ -53,6 +53,6 @@ BERKELEYALIGNER:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/install-berkeley.mk
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/install-berkeley.mk))
 ####                                                                        ####
 ################################################################################

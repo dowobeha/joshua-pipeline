@@ -37,7 +37,7 @@ DATA_WITHOUT_XML:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/002.OriginalData.mk
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/002.OriginalData.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -53,6 +53,6 @@ export .DEFAULT_GOAL=remove-xml
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/remove-xml.mk
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/remove-xml.mk))
 ####                                                                        ####
 ################################################################################

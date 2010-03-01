@@ -53,6 +53,6 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-#include ${EXPERIMENT_MAKE_DIR}/
+#$(eval $(call import,${EXPERIMENT_MAKE_DIR}/))
 ####                                                                        ####
 ################################################################################

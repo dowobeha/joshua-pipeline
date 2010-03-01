@@ -37,8 +37,8 @@ TOKENIZED_DATA:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/005.Scripts.mk
-include ${PATH.TO.THIS.MAKEFILE}/006.RemoveXML.mk
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/005.Scripts.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/006.RemoveXML.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -54,6 +54,6 @@ export .DEFAULT_GOAL=tokenize
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/tokenize.mk
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/tokenize.mk))
 ####                                                                        ####
 ################################################################################

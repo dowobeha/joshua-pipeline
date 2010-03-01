@@ -37,7 +37,7 @@ export DATA_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/001.OriginalData.mk
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/001.OriginalData.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -53,6 +53,6 @@ export .DEFAULT_GOAL=expand
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/expand-data.mk
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/expand-data.mk))
 ####                                                                        ####
 ################################################################################

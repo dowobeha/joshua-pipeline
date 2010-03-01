@@ -43,8 +43,8 @@ export SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/003.Joshua.mk
-include ${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/003.Joshua.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -60,6 +60,6 @@ export .DEFAULT_GOAL=subsample
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/subsample.mk
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/subsample.mk))
 ####                                                                        ####
 ################################################################################

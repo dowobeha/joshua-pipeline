@@ -37,7 +37,7 @@ export UNZIPPED_DATA:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/008.NormalizedData.mk
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/008.NormalizedData.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -53,6 +53,6 @@ export .DEFAULT_GOAL=unzip-data
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-include ${EXPERIMENT_MAKE_DIR}/unzip-data.mk
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/unzip-data.mk))
 ####                                                                        ####
 ################################################################################
