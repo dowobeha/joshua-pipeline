@@ -25,7 +25,7 @@ TGT ?= $(call USAGE)
 berkeley-align: ${BERKELEY_ALIGN_DIR}/alignments/training.align
 
 # Run Berkeley aligner
-${BERKELEY_ALIGN_DIR}/alignments/training.align: ${BERKELEY_ALIGN_DIR}/berkeley.aligner.config ${SUBSAMPLED_DATA}/subsampled/subsample.${SRC} ${SUBSAMPLED_DATA}/subsampled/subsample.${TGT}
+${BERKELEY_ALIGN_DIR}/alignments/training.${SRC} ${BERKELEY_ALIGN_DIR}/alignments/training.${TGT} ${BERKELEY_ALIGN_DIR}/alignments/training.align: ${BERKELEY_ALIGN_DIR}/berkeley.aligner.config ${SUBSAMPLED_DATA}/subsampled/subsample.${SRC} ${SUBSAMPLED_DATA}/subsampled/subsample.${TGT}
 	java ${BERKELEY_JVM_FLAGS} -jar ${BERKELEYALIGNER}/berkeleyaligner.jar ++${BERKELEY_ALIGN_DIR}/berkeley.aligner.config
 
 # Create directory
