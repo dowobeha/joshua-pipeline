@@ -20,9 +20,6 @@ SUBSAMPLED_DATA ?= $(call USAGE)
 SRC ?= $(call USAGE)
 TGT ?= $(call USAGE)
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
 
 # Convenient target
 berkeley-align: ${BERKELEY_ALIGN_DIR}/alignments/training.align

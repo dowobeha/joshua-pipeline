@@ -15,10 +15,6 @@ endef
 DATA_DIR ?= $(call USAGE)
 DATA_WITHOUT_XML ?= $(call USAGE)
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
-
 # Get names of XML files, with path removed
 #
 # See sections 8.2 and 4.3.3 of the GNU Make Manual

@@ -27,6 +27,7 @@ JOSHUA_MAX_N_ITEMS ?= $(call USAGE)
 JOSHUA_THREADS ?= $(call USAGE)
 JOSHUA_MEMORY_FLAGS ?= $(call USAGE)
 MERT_JVM_FLAGS ?= $(call USAGE)
+MERT_DIR ?= $(call USAGE)
 
 MERT_REQUIRED_JARS:=${JOSHUA}/bin/joshua.jar
 
@@ -44,11 +45,9 @@ MERT_METRIC:=$(error MERT_METRIC_NAME must be set to bleu or ter_bleu)
 endif
 
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
 
 mert: ${MERT_DIR}/joshua.config.ZMERT.final
+all: mert
 
 # Define how to create a tuned Joshua configuration using Z-MERT
 ${MERT_DIR}/joshua.config.ZMERT.final: ${MERT_REQUIRED_JARS} ${MERT_DIR}/mert.params ${MERT_DIR}/mert.config ${MERT_DIR}/joshua.config ${MERT_DIR}/decoder.command | ${MERT_DIR}

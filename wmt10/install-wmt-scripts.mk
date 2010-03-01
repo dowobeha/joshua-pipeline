@@ -15,16 +15,13 @@ endef
 #    print usage, then exit
 WMT_SCRIPTS ?= $(call USAGE)
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
-
 
 # These files can be extracted from the tools bundle
 SCRIPTS_FILES:=${WMT_SCRIPTS}/detokenizer.perl ${WMT_SCRIPTS}/wrap-xml.perl ${WMT_SCRIPTS}/lowercase.perl ${WMT_SCRIPTS}/tokenizer.perl ${WMT_SCRIPTS}/reuse-weights.perl ${WMT_SCRIPTS}/nonbreaking_prefixes/nonbreaking_prefix.de ${WMT_SCRIPTS}/nonbreaking_prefixes/nonbreaking_prefix.en ${WMT_SCRIPTS}/nonbreaking_prefixes/nonbreaking_prefix.el
 
 # Define a conveniently named target
 wmt-scripts: ${SCRIPTS_FILES}
+all: wmt-scripts
 
 # Extract files from tools (3 KB)
 ${SCRIPTS_FILES}: ${WMT_SCRIPTS}/scripts.tgz | ${WMT_SCRIPTS}

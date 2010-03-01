@@ -23,10 +23,6 @@ FILES_TO_TRANSLATE ?= $(call USAGE)
 SUBSAMPLED_DATA ?= $(call USAGE)
 SUBSAMPLER_JVM_FLAGS ?= $(call USAGE)
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
-
 
 # Define where training files for subsampler will be placed
 SUBSAMPLER_TRAINING_DIR:=${SUBSAMPLED_DATA}/training

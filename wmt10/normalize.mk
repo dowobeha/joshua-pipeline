@@ -16,10 +16,6 @@ WMT_SCRIPTS ?= $(call USAGE)
 TOKENIZED_DATA ?= $(call USAGE)
 NORMALIZED_DATA ?= $(call USAGE)
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
-
 
 # File names of files after processing
 NORMALIZED_FILES:=$(patsubst ${TOKENIZED_DATA}/%,${NORMALIZED_DATA}/%,$(wildcard ${TOKENIZED_DATA}/*))

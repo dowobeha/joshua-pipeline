@@ -17,12 +17,9 @@ endef
 BERKELEYALIGNER ?= $(call USAGE)
 
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
-
 # Define a conveniently named target
 berkeley-aligner: ${BERKELEYALIGNER}/berkeleyaligner.jar
+all: berkeley-aligner
 
 # Install Berkeley aligner
 ${BERKELEYALIGNER}/berkeleyaligner.jar: ${BERKELEYALIGNER}/berkeleyaligner_unsupervised-2.1.tar.gz | ${BERKELEYALIGNER}

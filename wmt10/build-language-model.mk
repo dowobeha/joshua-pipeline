@@ -19,10 +19,6 @@ LM_TRAINING_FILE_NAMES ?= $(call USAGE)
 LM_NGRAM_ORDER ?= $(call USAGE)
 TRAINED_LM_DIR ?= $(call USAGE)
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
-
 
 # Gather training file names with full path
 LM_TRAINING_FILES:=$(foreach file,${LM_TRAINING_FILE_NAMES},$(abspath ${LM_TRAINING_DIR}/${file}))

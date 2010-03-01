@@ -16,10 +16,6 @@ WMT_SCRIPTS ?= $(call USAGE)
 DATA_WITHOUT_XML ?= $(call USAGE)
 TOKENIZED_DATA ?= $(call USAGE)
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
-
 
 # Set a pattern-specific variable to define the language being tokenized
 #

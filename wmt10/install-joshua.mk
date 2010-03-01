@@ -17,12 +17,9 @@ SRILM ?= $(call USAGE)
 JOSHUA ?= $(call USAGE)
 
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
-
 # Install Joshua
 joshua: ${JOSHUA}/bin/joshua.jar
+all: joshua
 
 # Compile Joshua
 ${JOSHUA}/bin/joshua.jar: ${JOSHUA}/joshua-1.3.tgz | ${JOSHUA}

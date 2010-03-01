@@ -20,16 +20,13 @@ BERKELEY_ALIGN_DIR ?= $(call USAGE)
 EXTRACT_RULES_DIR ?= $(call USAGE)
 EXTRACT_RULES_JVM_FLAGS ?= $(call USAGE)
 
-# If the user does not specify a target, print out how to run this file
-usage:
-	$(call USAGE)
-
 
 COMPILED_JOSH_DIR:=${EXTRACT_RULES_DIR}/compiledCorpus.josh
 EXTRACTED_GRAMMAR:=${EXTRACT_RULES_DIR}/${SRC}-${TGT}.grammar
 
 # Convenient target
 extract-grammar: ${EXTRACTED_GRAMMAR}
+all: extract-grammar
 
 # Extract grammar
 ${EXTRACTED_GRAMMAR}: ${COMPILED_JOSH_DIR} ${EXTRACT_RULES_DIR}/extract.xml ${JOSHUA}/bin/joshua.jar ${SUBSAMPLED_DATA}/combined.test.${SRC} | ${EXTRACT_RULES_DIR}
