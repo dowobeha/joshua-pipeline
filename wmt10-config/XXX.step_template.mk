@@ -37,7 +37,7 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-#include ${PATH.TO.THIS.MAKEFILE}/
+#$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/))
 ####                                                                        ####
 ################################################################################
 
