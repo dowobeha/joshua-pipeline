@@ -45,8 +45,8 @@ export MERT_JVM_FLAGS:=-d64 -Dfile.encoding=utf8 -Xms2g -Xmx2g -Dfile.encoding=u
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-include ${PATH.TO.THIS.MAKEFILE}/012.ExtractGrammar.de-en.run1.mk
-include ${PATH.TO.THIS.MAKEFILE}/013.LanguageModel.en.run1.mk
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/012.ExtractGrammar.de-en.run1.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/013.LanguageModel.en.run1.mk))
 ####                                                                        ####
 ################################################################################
 
