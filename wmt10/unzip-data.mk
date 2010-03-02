@@ -46,31 +46,36 @@ PROCESSED_NON_GZIP_FILES:=$(foreach file,${NON_GZIP_FILES},${UNZIPPED_DATA}/${fi
 # Define how to strip GZIP
 #
 # See sections 6.6, 8.6 and 8.8 of the GNU Make Manual
-define STRIP_GZIP
-${UNZIPPED_DATA}/${1}: ${NORMALIZED_DATA}/${1}.gz | ${UNZIPPED_DATA}
-	zcat ${NORMALIZED_DATA}/${1}.gz > ${UNZIPPED_DATA}/${1}
-endef
+#define STRIP_GZIP
+#${UNZIPPED_DATA}/${1}: ${NORMALIZED_DATA}/${1}.gz | ${UNZIPPED_DATA}
+#	zcat ${NORMALIZED_DATA}/${1}.gz > ${UNZIPPED_DATA}/${1}
+#endef
 
+${UNZIPPED_DATA}/%: ${NORMALIZED_DATA}/%.gz | ${UNZIPPED_DATA}
+	zcat $< > $@
 
 # Dynamically create all of the actual rules to strip xml
 #
 # See sections 8.5, 8.6, and 8.8 of the GNU Make Manual
-$(foreach file,${BARE_GZIP_FILES},$(eval $(call STRIP_GZIP,${file})))
+#$(foreach file,${BARE_GZIP_FILES},$(eval $(call STRIP_GZIP,${file})))
 
 
 
 # Declare a function defining how soft-link non-GZIP files
 #
 # See sections 6.6, 8.6 and 8.8 of the GNU Make Manual
-define LINK_FILE
-${UNZIPPED_DATA}/${1}: ${NORMALIZED_DATA}/${1} | ${UNZIPPED_DATA}
-	ln -fs ${NORMALIZED_DATA}/${1} ${UNZIPPED_DATA}/${1}
-endef
+#define LINK_FILE
+#${UNZIPPED_DATA}/${1}: ${NORMALIZED_DATA}/${1} | ${UNZIPPED_DATA}
+#	ln -fs ${NORMALIZED_DATA}/${1} ${UNZIPPED_DATA}/${1}
+#endef
+
+${UNZIPPED_DATA}/%: ${NORMALIZED_DATA}/% | ${UNZIPPED_DATA}
+	ln -fs $< $@
 
 # Dynamically create all of the actual rules to link non-GZIP files
 #
 # See sections 8.5, 8.6, and 8.8 of the GNU Make Manual
-$(foreach file,${NON_GZIP_FILES},$(eval $(call LINK_FILE,${file})))
+#$(foreach file,${NON_GZIP_FILES},$(eval $(call LINK_FILE,${file})))
 
 
 
