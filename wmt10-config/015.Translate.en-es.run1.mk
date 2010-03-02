@@ -1,7 +1,7 @@
 ################################################################################
 ####            Define the purpose of this experimental step:               ####
 ####                                                                        ####
-#### This step runs MERT
+#### This step translates using Joshua
 ####                                                                        ####
 ################################################################################
 
@@ -29,16 +29,11 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ################################################################################
 ####                    Define any required variables:                      ####
 ####                                                                        ####
-export SRC:=en
-export TGT:=fr
-export MERT_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
-export MERT_INPUT_DIR:=${EXPERIMENT_DIR}/009.UnzippedData
-export MERT_FILE_TO_TRANSLATE:=news-test2008-src.${SRC}
-export MERT_REFERENCE_BASE:=news-test2008-src.${TGT}
-export MERT_NUM_REFERENCES:=1
-export MERT_METRIC_NAME:=bleu
-export MERT_JVM_FLAGS:=-d64 -Dfile.encoding=utf8 -Xms2g -Xmx2g -Dfile.encoding=utf8
-export JOSHUA_MEMORY_FLAGS=-d64 -Dfile.encoding=utf8 -XX:MinHeapFreeRatio=10 -Xmx30g
+export JOSHUA_TRANSLATION_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
+export JOSHUA_RULES_DIR:=${EXPERIMENT_DIR}/012.ExtractGrammar.en-es.run2
+export JOSHUA_TRANSLATION_INPUT_DIR:=${EXPERIMENT_DIR}/009.UnzippedData
+export JOSHUA_TRANSLATION_INPUT:=newstest2010-src.en
+export JOSHUA_TRANSLATION_OUTPUT:=newstest2010.es
 ####                                                                        ####
 ################################################################################
 
@@ -46,8 +41,7 @@ export JOSHUA_MEMORY_FLAGS=-d64 -Dfile.encoding=utf8 -XX:MinHeapFreeRatio=10 -Xm
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/012.ExtractGrammar.en-fr.run1.mk))
-$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/013.LanguageModel.fr.run1.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/014.MERT.en-es.bleu.run1.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -55,7 +49,7 @@ $(eval $(call import,${PATH.TO.THIS.MAKEFILE}/013.LanguageModel.fr.run1.mk))
 ################################################################################
 ####                     Define the target to be run:                       ####
 ####                                                                        ####
-export .DEFAULT_GOAL=mert
+export .DEFAULT_GOAL=joshua_decode
 ####                                                                        ####
 ################################################################################
 
@@ -63,6 +57,6 @@ export .DEFAULT_GOAL=mert
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-$(eval $(call import,${EXPERIMENT_MAKE_DIR}/mert.mk))
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/decode.mk))
 ####                                                                        ####
 ################################################################################

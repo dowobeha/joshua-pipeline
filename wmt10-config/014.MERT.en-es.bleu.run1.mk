@@ -38,6 +38,7 @@ export MERT_REFERENCE_BASE:=news-test2008-src.${TGT}
 export MERT_NUM_REFERENCES:=1
 export MERT_METRIC_NAME:=bleu
 export MERT_JVM_FLAGS:=-d64 -Dfile.encoding=utf8 -Xms2g -Xmx2g -Dfile.encoding=utf8
+export JOSHUA_MEMORY_FLAGS=-d64 -Dfile.encoding=utf8 -XX:MinHeapFreeRatio=10 -Xmx30g
 ####                                                                        ####
 ################################################################################
 
