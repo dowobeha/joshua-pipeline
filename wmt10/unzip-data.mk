@@ -64,7 +64,7 @@ $(foreach file,${BARE_GZIP_FILES},$(eval $(call STRIP_GZIP,${file})))
 # See sections 6.6, 8.6 and 8.8 of the GNU Make Manual
 define LINK_FILE
 ${UNZIPPED_DATA}/${1}: ${NORMALIZED_DATA}/${1} | ${UNZIPPED_DATA}
-	ln -s ${NORMALIZED_DATA}/${1} ${UNZIPPED_DATA}/${1}
+	ln -fs ${NORMALIZED_DATA}/${1} ${UNZIPPED_DATA}/${1}
 endef
 
 # Dynamically create all of the actual rules to link non-GZIP files

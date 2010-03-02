@@ -62,7 +62,7 @@ $(foreach file,${BARE_XML_FILES},$(eval $(call STRIP_XML,${file})))
 # See sections 6.6, 8.6 and 8.8 of the GNU Make Manual
 define LINK_FILE
 ${DATA_WITHOUT_XML}/${1}: ${DATA_DIR}/${1} | ${DATA_WITHOUT_XML}
-	ln -s ${DATA_DIR}/${1} ${DATA_WITHOUT_XML}/${1}
+	ln -fs ${DATA_DIR}/${1} ${DATA_WITHOUT_XML}/${1}
 endef
 
 # Dynamically create all of the actual rules to link non-XML files
