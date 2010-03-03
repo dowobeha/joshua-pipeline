@@ -33,7 +33,7 @@ export TRAINED_LM_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 export SRILM_NGRAM_COUNT:=${SRILM}/bin/i686-m64/ngram-count
 export LM_TRAINING_DIR:=${EXPERIMENT_DIR}/009.UnzippedData
 export LM_NGRAM_ORDER:=5
-export TGT:=en
+export TGT:=de
 export LM_TRAINING_FILE_NAMES:=europarl-v5.${TGT} news-commentary10.${TGT} news.${TGT}.shuffled
 ####                                                                        ####
 ################################################################################
