@@ -32,7 +32,7 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 export SRC:=fr
 export TGT:=en
 export MERT_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
-export MERT_INPUT_DIR:=${EXPERIMENT_DIR}/009.UnzippedData
+export MERT_INPUT_DIR:=${EXPERIMENT_DIR}/008.NormalizedData
 export MERT_FILE_TO_TRANSLATE:=news-test2008-src.${SRC}
 export MERT_REFERENCE_BASE:=news-test2008-src.${TGT}
 export MERT_NUM_REFERENCES:=1

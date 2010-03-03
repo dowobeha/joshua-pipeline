@@ -31,7 +31,7 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ####                                                                        ####
 export TRAINED_LM_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
 export SRILM_NGRAM_COUNT:=${SRILM}/bin/i686-m64/ngram-count
-export LM_TRAINING_DIR:=${EXPERIMENT_DIR}/009.UnzippedData
+export LM_TRAINING_DIR:=${EXPERIMENT_DIR}/008.NormalizedData
 export LM_NGRAM_ORDER:=5
 export TGT:=de
 export LM_TRAINING_FILE_NAMES:=europarl-v5.${TGT} news-commentary10.${TGT} news.${TGT}.shuffled
@@ -42,7 +42,7 @@ export LM_TRAINING_FILE_NAMES:=europarl-v5.${TGT} news-commentary10.${TGT} news.
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/008.NormalizedData.mk))
 ####                                                                        ####
 ################################################################################
 

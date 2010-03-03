@@ -44,7 +44,7 @@ export SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
 $(eval $(call import,${PATH.TO.THIS.MAKEFILE}/003.Joshua.mk))
-$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/009.UnzippedData.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/008.NormalizedData.mk))
 ####                                                                        ####
 ################################################################################
 
