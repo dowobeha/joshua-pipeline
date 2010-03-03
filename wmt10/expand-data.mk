@@ -24,7 +24,11 @@ PARALLEL_CORPORA:=${DATA_DIR}/europarl-v5.de-en.de ${DATA_DIR}/europarl-v5.de-en
 MONOLINGUAL_CORPORA:=${DATA_DIR}/europarl-v5.en ${DATA_DIR}/europarl-v5.de ${DATA_DIR}/europarl-v5.es ${DATA_DIR}/europarl-v5.fr ${DATA_DIR}/news-commentary10.en ${DATA_DIR}/news-commentary10.cz ${DATA_DIR}/news-commentary10.fr ${DATA_DIR}/news-commentary10.de ${DATA_DIR}/news-commentary10.es ${DATA_DIR}/news.de.shuffled ${DATA_DIR}/news.es.shuffled ${DATA_DIR}/news.en.shuffled ${DATA_DIR}/news.cz.shuffled ${DATA_DIR}/news.fr.shuffled
 
 # These files can be extracted from the 10^9 French-English parallel corpus
-HUGE_FR_EN_CORPUS:=${DATA_DIR}/giga-fren.release2.fr.gz ${DATA_DIR}/giga-fren.release2.en.gz
+HUGE_FR_EN_CORPUS.GZ:=${DATA_DIR}/giga-fren.release2.fr.gz ${DATA_DIR}/giga-fren.release2.en.gz
+#
+# Remove the .gz suffix from each file
+HUGE_FR_EN_CORPUS:=$(foreach file,${HUGE_FR_EN_CORPUS.GZ},$(basename ${file}))
+
 
 # These files can be extracted from the UN French-English parallel corpus
 UN_FR_EN_CORPUS:=${DATA_DIR}/undoc.2000.en-fr.en ${DATA_DIR}/undoc.2000.en-fr.fr
@@ -47,7 +51,7 @@ ${PARALLEL_CORPORA}: ${DOWNLOADS_DIR}/training-parallel.tgz | ${DATA_DIR}
 	tar -C ${DATA_DIR} --touch --strip-components=1 -x $(subst ${DATA_DIR}/,training/,$@) -vzf $<
 
 # Extract files from 10^9 French-English corpus (2.3 GB)
-${HUGE_FR_EN_CORPUS}: ${DOWNLOADS_DIR}/training-giga-fren.tar | ${DATA_DIR}
+${HUGE_FR_EN_CORPUS.GZ}: ${DOWNLOADS_DIR}/training-giga-fren.tar | ${DATA_DIR}
 	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vf $<
 
 # Extract files from monolingual language model training data (5.0 GB)
@@ -57,6 +61,10 @@ ${MONOLINGUAL_CORPORA}: ${DOWNLOADS_DIR}/training-monolingual.tgz | ${DATA_DIR}
 # Extract files from UN corpus French-English (671 MB)
 ${UN_FR_EN_CORPUS}: ${DOWNLOADS_DIR}/un.en-fr.tgz | ${DATA_DIR}
 	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
+
+${HUGE_FR_EN_CORPUS}: ${HUGE_FR_EN_CORPUS.GZ} | ${DATA_DIR}
+	zcat $@.gz > $@
+
 
 # Extract files from UN corpus Spanish-English (594 MB)
 ${UN_ES_EN_CORPUS}: ${DOWNLOADS_DIR}/un.en-es.tgz | ${DATA_DIR}
