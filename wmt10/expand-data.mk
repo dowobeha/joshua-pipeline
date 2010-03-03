@@ -51,6 +51,7 @@ ${PARALLEL_CORPORA}: ${DOWNLOADS_DIR}/training-parallel.tgz | ${DATA_DIR}
 	tar -C ${DATA_DIR} --touch --strip-components=1 -x $(subst ${DATA_DIR}/,training/,$@) -vzf $<
 
 # Extract files from 10^9 French-English corpus (2.3 GB)
+.INTERMEDIATE: ${HUGE_FR_EN_CORPUS.GZ}
 ${HUGE_FR_EN_CORPUS.GZ}: ${DOWNLOADS_DIR}/training-giga-fren.tar | ${DATA_DIR}
 	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vf $<
 
