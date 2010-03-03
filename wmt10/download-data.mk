@@ -42,6 +42,16 @@ ${DOWNLOADS_DIR}/dev.tgz : | ${DOWNLOADS_DIR}
 ${DOWNLOADS_DIR}/test.tgz: | ${DOWNLOADS_DIR}
 	wget --no-verbose -P ${DOWNLOADS_DIR} http://www.statmt.org/wmt10/test.tgz
 
+
+ifdef CZENG_USERNAME
+
+downloads: $(foreach n,0 1 2 3 4 5 6 7,${DOWNLOADS_DIR}/data-plaintext.${n}.tar)
+
+${DOWNLOADS_DIR}/data-plaintext.%.tar: | ${DOWNLOADS_DIR}
+	wget --no-verbose -P ${DOWNLOADS_DIR} --user=${CZENG_USERNAME} --password=czeng http://ufallab2.ms.mff.cuni.cz/~bojar/czeng09-data/data-plaintext.$*.tar
+
+endif
+
 # If someone calls make all, do the sensible thing
 all: downloads
 
