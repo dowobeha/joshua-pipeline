@@ -63,7 +63,7 @@ ${UN_FR_EN_CORPUS}: ${DOWNLOADS_DIR}/un.en-fr.tgz | ${DATA_DIR}
 	tar -C ${DATA_DIR} --touch -x $(subst ${DATA_DIR}/,,$@) -vzf $<
 
 ${HUGE_FR_EN_CORPUS}: ${HUGE_FR_EN_CORPUS.GZ} | ${DATA_DIR}
-	zcat $@.gz > $@
+	gunzip $@.gz
 
 
 # Extract files from UN corpus Spanish-English (594 MB)
