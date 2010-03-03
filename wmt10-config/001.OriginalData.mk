@@ -48,6 +48,7 @@ export .DEFAULT_GOAL=downloads
 ####                                                                        ####
 #### Define directory to save downloaded data
 export DOWNLOADS_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
+export CZENG_USERNAME:=fdf0c1
 ####                                                                        ####
 ################################################################################
 
