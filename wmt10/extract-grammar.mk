@@ -30,12 +30,12 @@ all: extract-grammar
 
 # Extract grammar
 ${EXTRACTED_GRAMMAR}: ${COMPILED_JOSH_DIR} ${EXTRACT_RULES_DIR}/extract.xml ${JOSHUA}/bin/joshua.jar ${SUBSAMPLED_DATA}/combined.test.${SRC} | ${EXTRACT_RULES_DIR}
-	export ANT_OPTS=${EXTRACT_RULES_JVM_FLAGS}; \
+	export ANT_OPTS="${EXTRACT_RULES_JVM_FLAGS}"; \
 	ant -f ${EXTRACT_RULES_DIR}/extract.xml extractGrammar
 
 # Compile corpus
 ${COMPILED_JOSH_DIR}: ${EXTRACT_RULES_DIR}/extract.xml ${JOSHUA}/bin/joshua.jar ${BERKELEY_ALIGN_DIR}/alignments/training.${SRC} ${BERKELEY_ALIGN_DIR}/alignments/training.${TGT}  ${BERKELEY_ALIGN_DIR}/alignments/training.align | ${EXTRACT_RULES_DIR}
-	export ANT_OPTS=${EXTRACT_RULES_JVM_FLAGS}; \
+	export ANT_OPTS="${EXTRACT_RULES_JVM_FLAGS}"; \
 	ant -f ${EXTRACT_RULES_DIR}/extract.xml compileCorpus
 
 # Create ant build file defining how to compile corpus and extract grammar

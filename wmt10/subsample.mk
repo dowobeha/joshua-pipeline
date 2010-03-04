@@ -5,7 +5,7 @@ THIS.MAKEFILE.DIR:=$(dir ${THIS.MAKEFILE})
 # Define how to run this file
 define USAGE
 	$(info  )
-	$(info Usage:	make -f ${THIS.MAKEFILE} SUBSAMPLER_JVM_FLAGS=jvmFlags SRC=srclang TGT=tgtlang UNZIPPED_DATA=/path/to/data FILTER_SCRIPT=/path/to/script JOSHUA=/path/to/joshua SUBSAMPLER_MANIFEST=manifestList FILES_TO_TRANSLATE=fileNamesWithoutPath SUBSAMPLED_DATA=/path/to/dir subsample)
+	$(info Usage:	make -f ${THIS.MAKEFILE} SUBSAMPLER_JVM_FLAGS=jvmFlags SRC=srclang TGT=tgtlang NORMALIZED_DATA=/path/to/data FILTER_SCRIPT=/path/to/script JOSHUA=/path/to/joshua SUBSAMPLER_MANIFEST=manifestList FILES_TO_TRANSLATE=fileNamesWithoutPath SUBSAMPLED_DATA=/path/to/dir subsample)
 	$(info  )
 	$(error )
 endef
@@ -16,7 +16,7 @@ endef
 SRC ?= $(call USAGE)
 TGT ?= $(call USAGE)
 JOSHUA ?= $(call USAGE)
-UNZIPPED_DATA ?= $(call USAGE)
+NORMALIZED_DATA ?= $(call USAGE)
 FILTER_SCRIPT ?= $(call USAGE)
 SUBSAMPLER_MANIFEST ?= $(call USAGE)
 FILES_TO_TRANSLATE ?= $(call USAGE)
@@ -49,11 +49,11 @@ subsample: ${SUBSAMPLED_DATA}/subsampled/subsample.${SRC} ${SUBSAMPLED_DATA}/sub
 
 
 # Define target to remove training lines with zero words on at least one side and those with 100+ words on at least one side
-${SUBSAMPLER_TRAINING_DIR}/%.${SRC} ${SUBSAMPLER_TRAINING_DIR}/%.${TGT}: ${UNZIPPED_DATA}/%.${SRC} ${UNZIPPED_DATA}/%.${TGT} ${THIS.MAKEFILE.DIR}/filter-sentences.pl | ${SUBSAMPLER_TRAINING_DIR}
-	${THIS.MAKEFILE.DIR}/filter-sentences.pl ${UNZIPPED_DATA}/$*.${SRC} ${UNZIPPED_DATA}/$*.${TGT} ${SUBSAMPLER_TRAINING_DIR}/$*.${SRC} ${SUBSAMPLER_TRAINING_DIR}/$*.${TGT}
+${SUBSAMPLER_TRAINING_DIR}/%.${SRC} ${SUBSAMPLER_TRAINING_DIR}/%.${TGT}: ${NORMALIZED_DATA}/%.${SRC} ${NORMALIZED_DATA}/%.${TGT} ${THIS.MAKEFILE.DIR}/filter-sentences.pl | ${SUBSAMPLER_TRAINING_DIR}
+	${THIS.MAKEFILE.DIR}/filter-sentences.pl ${NORMALIZED_DATA}/$*.${SRC} ${NORMALIZED_DATA}/$*.${TGT} ${SUBSAMPLER_TRAINING_DIR}/$*.${SRC} ${SUBSAMPLER_TRAINING_DIR}/$*.${TGT}
 
 # Define target to copy files to translate to subsampler dir
-${SUBSAMPLER_TEST_DIR}/%: ${UNZIPPED_DATA}/% | ${SUBSAMPLER_TEST_DIR}
+${SUBSAMPLER_TEST_DIR}/%: ${NORMALIZED_DATA}/% | ${SUBSAMPLER_TEST_DIR}
 	cp $< $@
 
 # Create manifest for subsampling
