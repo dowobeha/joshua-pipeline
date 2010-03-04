@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat $1 | grep "Total time for rule lookup, extraction, and scoring" | sed 's/.*Total time for rule lookup, extraction, and scoring = //; s/ seconds *//' | ruby -e 'total=0.0; lineCount=0; STDIN.each_line{|line| ms=line.strip.to_f; total+=ms; lineCount+=1}; puts "#{lineCount} lines at #{(total)/lineCount} sec/sentence\nTotal time:\t(#{total} sec)\t(#{total/60} min)\t(#{total/60/60} hours)"; remaining=(total/lineCount)*(ARGV[0].to_i-lineCount); puts "Remaining time:\t(#{remaining} sec)\t(#{remaining/60} min)\t(#{remaining/60/60} hours)" if ARGV.length>0; ' $2
