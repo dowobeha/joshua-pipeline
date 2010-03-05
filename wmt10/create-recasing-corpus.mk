@@ -16,10 +16,9 @@ endef
 RECASING_CORPUS_DIR ?= $(call USAGE)
 TOKENIZED_DATA ?= $(call USAGE)
 SUBSAMPLER_MANIFEST ?= $(call USAGE)
-SRC ?= $(call USAGE)
 TGT ?= $(call USAGE)
 
-RECASING_FILES:=$(foreach lang,${SRC} ${TGT},$(foreach file,${SUBSAMPLER_MANIFEST},${RECASING_CORPUS_DIR}/${file}.${lang}))
+RECASING_FILES:=$(foreach suffix,truecase lowercase,$(foreach file,${SUBSAMPLER_MANIFEST},${RECASING_CORPUS_DIR}/${file}.${TGT}.${suffix}))
 
 recasing-corpus: ${RECASING_FILES}
 all: recasing-corpus
@@ -28,11 +27,11 @@ $(info ${RECASING_FILES})
 
 
 # Create link for source file
-${RECASING_CORPUS_DIR}/%.${SRC}: ${TOKENIZED_DATA}/%.${SRC} | ${RECASING_CORPUS_DIR}
+${RECASING_CORPUS_DIR}/%.${TGT}.truecase: ${TOKENIZED_DATA}/%.${TGT} | ${RECASING_CORPUS_DIR}
 	ln -fs $< $@
 
 # Create lowercase file
-${RECASING_CORPUS_DIR}/%.${TGT}: ${TOKENIZED_DATA}/%.${TGT} | ${RECASING_CORPUS_DIR} ${THIS.MAKEFILE.DIR}/create-recasing-corpus.perl
+${RECASING_CORPUS_DIR}/%.${TGT}.lowercase: ${TOKENIZED_DATA}/%.${TGT} | ${RECASING_CORPUS_DIR} ${THIS.MAKEFILE.DIR}/create-recasing-corpus.perl
 	${THIS.MAKEFILE.DIR}/create-recasing-corpus.perl $< $@
 
 
