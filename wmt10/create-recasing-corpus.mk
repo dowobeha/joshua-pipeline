@@ -23,8 +23,6 @@ RECASING_FILES:=$(foreach suffix,truecase lowercase,$(foreach file,${SUBSAMPLER_
 recasing-corpus: ${RECASING_FILES}
 all: recasing-corpus
 
-$(info ${RECASING_FILES})
-
 
 # Create link for source file
 ${RECASING_CORPUS_DIR}/%.${TGT}.truecase: ${TOKENIZED_DATA}/%.${TGT} | ${RECASING_CORPUS_DIR}
