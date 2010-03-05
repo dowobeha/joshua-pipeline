@@ -30,7 +30,7 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ####                    Define any required variables:                      ####
 ####                                                                        ####
 export JOSHUA_TRANSLATION_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
-export JOSHUA_RULES_DIR:=${EXPERIMENT_DIR}/012.ExtractGrammar.en-es.run2
+export JOSHUA_RULES_DIR:=${EXPERIMENT_DIR}/012.ExtractGrammarHiero.en-es.run2
 export JOSHUA_TRANSLATION_INPUT_DIR:=${EXPERIMENT_DIR}/008.NormalizedData
 export JOSHUA_TRANSLATION_INPUT:=newstest2010-src.en
 export JOSHUA_TRANSLATION_OUTPUT:=newstest2010.es
