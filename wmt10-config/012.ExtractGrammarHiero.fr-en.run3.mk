@@ -30,7 +30,7 @@ include ${PATH.TO.THIS.MAKEFILE}/000.experiment.mk
 ####                    Define any required variables:                      ####
 ####                                                                        ####
 export EXTRACT_RULES_DIR:=${EXPERIMENT_DIR}/${THIS.MAKEFILE.NAME}
-export EXTRACT_RULES_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
+export HIERO_DIR:=/home/zli/work/hiero/copy_2008/sa_copy/sa-hiero_adapted
 ####                                                                        ####
 ################################################################################
 
@@ -38,7 +38,7 @@ export EXTRACT_RULES_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 ################################################################################
 ####                Import any immediate prerequisite steps:                ####
 ####                                                                        ####
-$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/011.BerkeleyAlign.en-fr.run3.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/011.BerkeleyAlign.fr-en.run3.mk))
 ####                                                                        ####
 ################################################################################
 
@@ -54,6 +54,6 @@ export .DEFAULT_GOAL=extract-grammar
 ################################################################################
 ####                     Define how to run this step:                       ####
 ####                                                                        ####
-$(eval $(call import,${EXPERIMENT_MAKE_DIR}/extract-grammar.mk))
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/extract-grammar-hiero.mk))
 ####                                                                        ####
 ################################################################################
