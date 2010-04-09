@@ -23,7 +23,7 @@ all: $(call EXPAND_DATA_WMT10_TRAINING_UN_ES_EN_FILES,$2)
 
 # Extract files from UN corpus Spanish-English (594 MB)
 $(call EXPAND_DATA_WMT10_TRAINING_UN_ES_EN_FILES,$2): $1/un.en-es.tgz | $2
-	tar -C $2 --touch -x $(subst $2/,,$$@) -vzf $$<
+	tar -C $2 --touch -x $$(subst $2/,,$$@) -vzf $$<
 
 
 endef

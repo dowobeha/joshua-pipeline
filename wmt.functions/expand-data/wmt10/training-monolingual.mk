@@ -23,7 +23,7 @@ all: $(call EXPAND_DATA_WMT10_TRAINING_MONOLINGUAL_FILES,$2)
 
 # Extract files from monolingual language model training data (5.0 GB)
 $(call EXPAND_DATA_WMT10_TRAINING_MONOLINGUAL_FILES,$2): $1/training-monolingual.tgz | $2
-	tar -C $2 --touch --strip-components=1 -x $(subst $2/,training/,$$@) -vzf $$<
+	tar -C $2 --touch --strip-components=1 -x $$(subst $2/,training/,$$@) -vzf $$<
 
 endef
 

@@ -22,7 +22,7 @@ all: $(call EXPAND_DATA_WMT10_TEST_FILES,$2)
 
 # Extract files from test sets (715 KB)
 $(call EXPAND_DATA_WMT10_TEST_FILES,$2): $1/test.tgz | $2
-	tar -C $2 --touch --strip-components=1 -x $(subst $2/,test/,$$@) -vzf $$<
+	tar -C $2 --touch --strip-components=1 -x $$(subst $2/,test/,$$@) -vzf $$<
 
 endef
 

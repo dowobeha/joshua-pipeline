@@ -23,7 +23,7 @@ all: $(call EXPAND_DATA_WMT10_TRAINING_PARALLEL_FILES,$2)
 
 # Extract files from parallel corpus training data
 $(call EXPAND_DATA_WMT10_TRAINING_PARALLEL_FILES,$2): $1/training-parallel.tgz | $2
-	tar -C $2 --touch --strip-components=1 -x $(subst $2/,training/,$$@) -vzf $$<
+	tar -C $2 --touch --strip-components=1 -x $$(subst $2/,training/,$$@) -vzf $$<
 
 endef
 

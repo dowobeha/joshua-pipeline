@@ -24,7 +24,7 @@ all: $(call EXPAND_DATA_WMT10_TRAINING_HUGE_FR_EN_FILES,$2)
 # Extract files from 10^9 French-English corpus (2.3 GB)
 .INTERMEDIATE: $(call EXPAND_DATA_WMT10_TRAINING_HUGE_FR_EN_FILES_GZ,$2)
 $(call EXPAND_DATA_WMT10_TRAINING_HUGE_FR_EN_FILES_GZ,$2): $1/training-giga-fren.tar | $2
-	tar -C $2 --touch -x $(subst $2/,,$$@) -vf $$<
+	tar -C $2 --touch -x $$(subst $2/,,$$@) -vf $$<
 
 $(call EXPAND_DATA_WMT10_TRAINING_HUGE_FR_EN_FILES,$2): $(call EXPAND_DATA_WMT10_TRAINING_HUGE_FR_EN_FILES_GZ,$2) | $2
 	gunzip $$@.gz

@@ -25,7 +25,7 @@ all: $(call EXPAND_DATA_WMT10_DEV_FILES,$2)
 
 # Extract files from development sets (4.0 MB)
 $(call EXPAND_DATA_WMT10_DEV_FILES,$2): $1/dev.tgz | $2
-	tar -C $2 --touch --strip-components=1 -x $(subst $2/,dev/,$$@) -vzf $$<
+	tar -C $2 --touch --strip-components=1 -x $$(subst $2/,dev/,$$@) -vzf $$<
 
 endef
 
