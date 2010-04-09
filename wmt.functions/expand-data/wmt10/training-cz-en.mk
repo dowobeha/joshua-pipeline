@@ -47,9 +47,6 @@ endef
 ################################################################################
 
 
-#$(if $1,,$(error Function $0: a required parameter $$1 (DATA_DIR) was omitted))
-#$(if $2,,$(error Function $0: a required parameter $$2 (TENS_DIGIT) was omitted))
-#$(if $3,,$(error Function $0: a required parameter $$3 (ONES_DIGIT) was omitted))
 
 ################################################################################
 #### Helper function definition: 
@@ -62,6 +59,9 @@ endef
 # Dynamically create new make targets for a file to be unzipped
 define EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GUNZIP
 
+$(if $1,,$(error Function $0: a required parameter $$1 (DATA_DIR) was omitted))
+$(if $2,,$(error Function $0: a required parameter $$2 (TENS_DIGIT) was omitted))
+$(if $3,,$(error Function $0: a required parameter $$3 (ONES_DIGIT) was omitted))
 
 # Add this file to list of targets that should be made by all
 all: ${1}/data-plaintext/${2}${3}train
@@ -78,10 +78,6 @@ endef
 
 
 
-#$(if $1,,$(error Function $0: a required parameter $$1 (DOWNLOADS_DIR) was omitted))
-#$(if $2,,$(error Function $0: a required parameter $$2 (DATA_DIR) was omitted))
-#$(if $3,,$(error Function $0: a required parameter $$3 (TENS_DIGIT) was omitted))
-
 ################################################################################
 #### Helper function definition: 
 ####
@@ -92,6 +88,10 @@ endef
 
 # Dynamically create new make targets for files to be untarred
 define EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_UNTAR
+
+$(if $1,,$(error Function $0: a required parameter $$1 (DOWNLOADS_DIR) was omitted))
+$(if $2,,$(error Function $0: a required parameter $$2 (DATA_DIR) was omitted))
+$(if $3,,$(error Function $0: a required parameter $$3 (TENS_DIGIT) was omitted))
 
 # Declare these files to be temporary - it's ok to delete them later
 .INTERMEDIATE: $(call EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GZ,$2,$3)
@@ -107,8 +107,6 @@ endef
 
 
 
-#$(if $1,,$(error Function $0: a required parameter $$1 (DATA_DIR) was omitted))
-#$(if $2,,$(error Function $0: a required parameter $$2 (TENS_DIGIT) was omitted))
 
 ################################################################################
 #### Helper function definition: 
@@ -118,7 +116,8 @@ endef
 
 # Calculate list of gzipped files contained in a tar file
 define EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GZ
-
+$(if $1,,$(error Function $0: a required parameter $$1 (DATA_DIR) was omitted))\
+$(if $2,,$(error Function $0: a required parameter $$2 (TENS_DIGIT) was omitted))\
 $(foreach digit,0 1 2 3 4 5 6 7 8 9,$1/data-plaintext/$2${digit}train.gz)
 endef
 
