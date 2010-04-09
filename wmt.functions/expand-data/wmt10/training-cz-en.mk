@@ -97,14 +97,15 @@ $(if $3,,$(error Function $0: a required parameter $$3 (TENS_DIGIT) was omitted)
 .INTERMEDIATE: $(call EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GZ,$2,$3)
 
 # Actually define the dynamically created target
-$(call EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GZ,$2,$3): $1/data-plaintext.$3.tar | $2
-	tar -C $2 --touch -x $$(subst $2/,,$$@) -vf $$<
+$(foreach d,0 1 2 3 4 5 6 7 8 9,${2}/data-plaintext/%${d}train.gz): $1/data-plaintext.%.tar | $2
+	tar -C $2 --touch -x $$(subst $2/,,$(foreach d,0 1 2 3 4 5 6 7 8 9,${2}/data-plaintext/$$*${d}train.gz)) -vf $$<
 endef
 
 ####                                                                        ####
 ################################################################################
-
-
+#$(call EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GZ,$2,$3): $1/data-plaintext.%.tar | $2
+#$
+#$2/%0train.gz $2/%1train.gz $2/%2train.gz: $1/data-plaintext.%.tar | $2
 
 
 
@@ -118,7 +119,7 @@ endef
 define EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GZ
 $(if $1,,$(error Function $0: a required parameter $$1 (DATA_DIR) was omitted))\
 $(if $2,,$(error Function $0: a required parameter $$2 (TENS_DIGIT) was omitted))\
-$(foreach digit,0 1 2 3 4 5 6 7 8 9,$1/data-plaintext/$2${digit}train.gz)
+$(foreach digit,0 1 2 3 4 5 6 7 8 9,$1/data-plaintext/%${digit}train.gz)
 endef
 
 ####                                                                        ####
