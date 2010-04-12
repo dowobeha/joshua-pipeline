@@ -75,3 +75,8 @@ PROCESSED_NON_XML_FILES:=$(foreach file,${NON_XML_FILES},${DATA_WITHOUT_XML}/${f
 # File names of files after processing
 TOKENIZED_DATA:=${EXPERIMENT_DIR}/007.TokenizedData
 TOKENIZED_FILES:=$(patsubst ${DATA_WITHOUT_XML}/%,${TOKENIZED_DATA}/%,$(wildcard ${DATA_WITHOUT_XML}/*))
+
+# File names of files after processing
+NORMALIZED_DATA:=${EXPERIMENT_DIR}/008.NormalizedData
+NORMALIZED_FILES:=$(patsubst ${TOKENIZED_DATA}/%,${NORMALIZED_DATA}/%,$(wildcard ${TOKENIZED_DATA}/*))
+
