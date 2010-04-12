@@ -22,7 +22,7 @@ $(if $2,,$(error Function $0: a required parameter $$2 (defining DATA_DIR) was o
 all: $(call EXPAND_DATA_WMT10_TRAINING_HUGE_FR_EN_FILES,$2)
 
 # Extract files from 10^9 French-English corpus (2.3 GB)
-.INTERMEDIATE: $(call EXPAND_DATA_WMT10_TRAINING_HUGE_FR_EN_FILES_GZ,$2)
+.INTERMEDIATE: $2/giga-fren.release2.fr.gz $2/giga-fren.release2.en.gz
 $(call EXPAND_DATA_WMT10_TRAINING_HUGE_FR_EN_FILES_GZ,$2): $1/training-giga-fren.tar | $2
 	tar -C $2 --touch -x $$(subst $2/,,$$@) -vf $$<
 

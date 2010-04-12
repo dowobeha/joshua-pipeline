@@ -5,7 +5,7 @@
 ####                                                                        ####
 ################################################################################
 
-
+#$(foreach tensDigit,0 1 2 3 4 5 6 7,$(foreach digit,0 1 2 3 4 5 6 7 8 9,${tensDigit}${digit}%)) | $2
 ################################################################################
 #### Function definition:              
 ####
@@ -18,6 +18,15 @@ define EXPAND_DATA_WMT10_TRAINING_CZ_EN
 
 $(if $1,,$(error Function $0: a required parameter $$1 (defining DOWNLOADS_DIR) was omitted))
 $(if $2,,$(error Function $0: a required parameter $$2 (defining DATA_DIR) was omitted))
+$(if $3,,$(error Function $0: a required parameter $$3 (defining CZENG_SCRIPT) was omitted))
+
+
+# Create actual parallel corpus files
+$2/czeng-%.en $2/czeng-%.cz: $(foreach tensDigit,0 1 2 3 4 5 6 7,$(foreach digit,0 1 2 3 4 5 6 7 8 9,$2/${tensDigit}${digit}train)) | $2
+	cat $$^ | $3 $2/czeng-$$*.en $2/czeng-$$*.cz
+
+# Add this file to list of targets that should be made by all
+all: $2/czeng-train.en $2/czeng-train.cz
 
 
 # Extract unzipped files from Czech-English corpus
@@ -63,11 +72,10 @@ $(if $1,,$(error Function $0: a required parameter $$1 (DATA_DIR) was omitted))
 $(if $2,,$(error Function $0: a required parameter $$2 (TENS_DIGIT) was omitted))
 $(if $3,,$(error Function $0: a required parameter $$3 (ONES_DIGIT) was omitted))
 
-# Add this file to list of targets that should be made by all
-all: ${1}/data-plaintext/${2}${3}train
+.INTERMEDIATE: ${1}/${2}${3}train
 
 # Actually define the dynamically created target
-${1}/data-plaintext/${2}${3}train: ${1}/data-plaintext/${2}${3}train.gz
+${1}/${2}${3}train: ${1}/${2}${3}train.gz
 	gunzip $$@.gz
 endef
 
@@ -94,18 +102,17 @@ $(if $2,,$(error Function $0: a required parameter $$2 (DATA_DIR) was omitted))
 $(if $3,,$(error Function $0: a required parameter $$3 (TENS_DIGIT) was omitted))
 
 # Declare these files to be temporary - it's ok to delete them later
-.INTERMEDIATE: $(call EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GZ,$2,$3)
+.INTERMEDIATE: $(foreach tensDigit,0 1 2 3 4 5 6 7,$(foreach d,0 1 2 3 4 5 6 7 8 9,$2/${tensDigit}${d}train.gz))
 
 # Actually define the dynamically created target
-$(foreach d,0 1 2 3 4 5 6 7 8 9,${2}/data-plaintext/%${d}train.gz): $1/data-plaintext.%.tar | $2
-	tar -C $2 --touch -x $$(subst $2/,,$(foreach d,0 1 2 3 4 5 6 7 8 9,${2}/data-plaintext/$$*${d}train.gz)) -vf $$<
+$(foreach d,0 1 2 3 4 5 6 7 8 9,${2}/%${d}train.gz): $1/data-plaintext.%.tar | $2 
+	tar -C $2 --touch -x $$(subst $2/,,$(foreach d,0 1 2 3 4 5 6 7 8 9,data-plaintext/$$*${d}train.gz)) --show-transformed --strip-components=1 -vf $$<
+
 endef
 
 ####                                                                        ####
 ################################################################################
-#$(call EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GZ,$2,$3): $1/data-plaintext.%.tar | $2
-#$
-#$2/%0train.gz $2/%1train.gz $2/%2train.gz: $1/data-plaintext.%.tar | $2
+
 
 
 
@@ -119,7 +126,7 @@ endef
 define EXPAND_DATA_WMT10_TRAINING_CZ_EN_FILES_GZ
 $(if $1,,$(error Function $0: a required parameter $$1 (DATA_DIR) was omitted))\
 $(if $2,,$(error Function $0: a required parameter $$2 (TENS_DIGIT) was omitted))\
-$(foreach digit,0 1 2 3 4 5 6 7 8 9,$1/data-plaintext/%${digit}train.gz)
+$(foreach digit,0 1 2 3 4 5 6 7 8 9,$1/%${digit}train.gz)
 endef
 
 ####                                                                        ####
