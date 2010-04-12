@@ -1,40 +1,53 @@
-# Calculate the full path to this make file
-THIS.MAKEFILE:= $(realpath $(lastword ${MAKEFILE_LIST}))
-
-# Define how to run this file
-define USAGE
-	$(info  )
-	$(info Usage:	make -f ${THIS.MAKEFILE} TOKENIZED_DATA=/path/to/data WMT_SCRIPTS=/path/to/scripts NORMALIZED_DATA=/path/to/dir normalize)
-	$(info  )
-	$(error )
-endef
+################################################################################
+####                       Purpose of this make file:                       ####
+####                                                                        ####
+#### This file defines functions to remove XML
+####                                                                        ####
+################################################################################
 
 
-# If this required parameter is not defined,
-#    print usage, then exit
-WMT_SCRIPTS ?= $(call USAGE)
-TOKENIZED_DATA ?= $(call USAGE)
-NORMALIZED_DATA ?= $(call USAGE)
+################################################################################
+#### Function definition:              
+####
+#### Parameter 1 (required): WMT_SCRIPTS
+#### Parameter 2 (required): TOKENIZED_DATA
+#### Parameter 3 (required): NORMALIZED_DATA
+#### Parameter 4 (required): NORMALIZED_FILES
 
+define NORMALIZE_DATA
 
-# File names of files after processing
-NORMALIZED_FILES:=$(patsubst ${TOKENIZED_DATA}/%,${NORMALIZED_DATA}/%,$(wildcard ${TOKENIZED_DATA}/*))
+$(if $1,,$(error Function $0: a required parameter $$1 (defining WMT_SCRIPTS) was omitted))
+$(if $2,,$(error Function $0: a required parameter $$2 (defining TOKENIZED_DATA) was omitted))
+$(if $3,,$(error Function $0: a required parameter $$3 (defining NORMALIZED_DATA) was omitted))
+$(if $4,,$(error Function $0: a required parameter $$4 (defining NORMALIZED_FILES) was omitted))
+
 
 # Normalize zipped plain text data
-${NORMALIZED_DATA}/%.gz: ${TOKENIZED_DATA}/%.gz ${WMT_SCRIPTS}/tokenizer.perl | ${NORMALIZED_DATA}
-	zcat $< | perl ${WMT_SCRIPTS}/lowercase.perl | gzip - > $@
+$3/%.gz: $2/%.gz $1/tokenizer.perl | $3
+	zcat $$< | perl $1/lowercase.perl | gzip - > $$@
 
 # Normalize plain text data
-${NORMALIZED_DATA}/%: ${TOKENIZED_DATA}/% ${WMT_SCRIPTS}/tokenizer.perl | ${NORMALIZED_DATA}
-	cat $< | perl ${WMT_SCRIPTS}/lowercase.perl > $@
+$3/%: $2/% $1/tokenizer.perl | $3
+	cat $$< | perl $1/lowercase.perl > $$@
 
 # Normalize all data
 #
 #    Look at all of the files in the prerequisite TOKENIZED_DATA directory,
 #    and make a new tokenized file with the same name in the NORMALIZED_DATA directory.
-normalize: ${NORMALIZED_FILES}
+all: $4
 
 
 # Make directory to store normalized data
-${NORMALIZED_DATA}:
-	mkdir -p $@
+$3:
+	mkdir -p $$@
+
+endef
+
+####                                                                        ####
+################################################################################
+
+
+
+
+
+
