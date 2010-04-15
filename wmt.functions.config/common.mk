@@ -143,3 +143,13 @@ $(if ${TGT},newstest2009.1best.${TGT},$(error TGT language is not defined))
 endef
 
 JOSHUA_EXTRACT_MBR_BEST_NUM_THREADS:=10
+
+define JOSHUA_EXTRACT_DEV_MBR_BEST_INPUT
+$(if ${JOSHUA_TRANSLATION_DIR},,$(error JOSHUA_TRANSLATION_DIR is not defined))\
+$(if ${JOSHUA_DEV_NBEST_OUTPUT_FILENAME},,$(error JOSHUA_DEV_NBEST_OUTPUT_FILENAME is not defined))\
+${JOSHUA_TRANSLATION_DIR}/${JOSHUA_DEV_NBEST_OUTPUT_FILENAME}
+endef
+
+define JOSHUA_EXTRACT_DEV_MBR_BEST_OUTPUT_FILENAME
+$(if ${TGT},newstest2009.mbr.${TGT},$(error TGT language is not defined))
+endef
