@@ -9,33 +9,26 @@ THIS.MAKEFILE.NAME:=$(basename $(notdir $(lastword ${MAKEFILE_LIST})))
 ####                                                                        ####
 ################################################################################
 
-# Define variables that require the filename of this make file
-SUBSAMPLED_DATA:=${THIS.MAKEFILE.NAME}
+
+# Start initializing this variable
+EXTRACT_RULES_DIR:=${THIS.MAKEFILE.NAME}
 
 # Define how to import other make files
 include ${PATH.TO.THIS.MAKEFILE}/import.mk
 
 # Import common variables
-$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/common.cz-_.mk))
-$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/common._-en.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/011.BerkeleyAlign.cz-en.run1.mk))
 
-
-# Define the rest of the variables needed for this step
-SUBSAMPLED_DATA:=${EXPERIMENT_DIR}/${SUBSAMPLED_DATA}
-SUBSAMPLER_MANIFEST:=news-commentary10.cz-en czeng-train
-
+# Finish initializing this variable
+EXTRACT_RULES_DIR:=${EXPERIMENT_DIR}/${EXTRACT_RULES_DIR}
 
 ################################################################################
 ####                                                                        ####
 ####                   Download and install software                        ####
 
-# Download and install Joshua
-$(eval $(call import,${EXPERIMENT_MAKE_DIR}/train/subsample.mk))
-$(eval $(call SUBSAMPLE_DATA,${SUBSAMPLED_DATA},${SRC},${TGT},${SUBSAMPLER_MANIFEST},${NORMALIZED_DATA},${FILTER_SCRIPT},${JOSHUA},${SUBSAMPLER_JVM_FLAGS},${SUBSAMPLER_FILES_TO_TRANSLATE}))
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/train/extract-grammar-hiero.mk))
+$(eval $(call EXTRACT_GRAMMAR_HIERO,${EXTRACT_RULES_DIR},${SRC},${TGT},${BERKELEY_ALIGN_DIR},${SUBSAMPLED_DATA},${HIERO_DIR}))
 
 ####                                                                        ####
 ####         ... done downloading and installing software                   ####
 ################################################################################
-
-
-

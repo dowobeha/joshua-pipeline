@@ -3,17 +3,14 @@
 ####                                                                        ####
 #### Get the full path to this make file
 PATH.TO.THIS.MAKEFILE:=$(abspath $(dir $(lastword ${MAKEFILE_LIST})))
-####
-#### Get the filename of this make file
-THIS.MAKEFILE.NAME:=$(basename $(notdir $(lastword ${MAKEFILE_LIST})))
 ####                                                                        ####
 ################################################################################
 
+# Define how to import other make files
+include ${PATH.TO.THIS.MAKEFILE}/import.mk
 
-all:
-	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/experiment.mk
-	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/010.Subsample.cz-en.run1.mk
-	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/011.BerkeleyAlign.cz-en.run1.mk
-	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/012.ExtractGrammar.cz-en.run1.mk
-	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/013.LanguageModel.en.run1.mk
-	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/014.MERT.cz-en.bleu.run1.mk
+# Import common variables
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/common.mk))
+
+
+SRC:=cz

@@ -26,7 +26,7 @@ $(eval $(call import,${EXPERIMENT_MAKE_DIR}/prepare-data/wmt10/link-data.mk))
 ifndef TOY_SIZE
 $(eval $(call LINK_UNZIPPED_DATA,${UNZIPPED_DATA_DIR},${DATA_DIR}))
 else
-$(eval $(call LINK_UNZIPPED_DATA_TOY,${UNZIPPED_DATA_DIR},${DATA_DIR},${TOY_SIZE}))
+$(eval $(call LINK_UNZIPPED_DATA_TOY,${UNZIPPED_DATA_DIR},${DATA_DIR},${TOY_SIZE},${TOY_TEST_SIZE},${TOY_TEST_SGM_SCRIPT}))
 endif
 
 ####                                                                        ####
