@@ -9,24 +9,30 @@ THIS.MAKEFILE.NAME:=$(basename $(notdir $(lastword ${MAKEFILE_LIST})))
 ####                                                                        ####
 ################################################################################
 
+
+# Start initializing this variable
+BERKELEY_ALIGN_DIR:=${THIS.MAKEFILE.NAME}
+
 # Define how to import other make files
 include ${PATH.TO.THIS.MAKEFILE}/import.mk
 
 # Import common variables
-$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/common.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/010.Subsample.cz-en.run1.mk))
 
-
+# Finish initializing this variable
+BERKELEY_ALIGN_DIR:=${EXPERIMENT_DIR}/${BERKELEY_ALIGN_DIR}
 
 ################################################################################
 ####                                                                        ####
-####                        Prepare data for use                            ####
+####                   Download and install software                        ####
 
-# Link data
-$(eval $(call import,${EXPERIMENT_MAKE_DIR}/prepare-data/wmt10/remove-xml.mk))
-$(eval $(call LINK_STRIP_XML_DATA,${DATA_DIR},${BARE_XML_FILES},${NON_XML_FILES},${PROCESSED_XML_FILES},${PROCESSED_NON_XML_FILES},${DATA_WITHOUT_XML}))
-
-
+# Download and install Joshua
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/train/berkeley-align.mk))
+$(eval $(call BERKELEY_ALIGN,${BERKELEY_ALIGN_DIR},${SRC},${TGT},${SUBSAMPLED_DATA},${BERKELEYALIGNER},${BERKELEY_NUM_THREADS},${BERKELEY_JVM_FLAGS}))
 
 ####                                                                        ####
-####             ... done downloading data from the web                     ####
+####         ... done downloading and installing software                   ####
 ################################################################################
+
+
+

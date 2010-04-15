@@ -9,7 +9,12 @@ THIS.MAKEFILE.NAME:=$(basename $(notdir $(lastword ${MAKEFILE_LIST})))
 ####                                                                        ####
 ################################################################################
 
-include ${PATH.TO.THIS.MAKEFILE}/common.mk
+# Define how to import other make files
+include ${PATH.TO.THIS.MAKEFILE}/import.mk
+
+# Import common variables
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/common.mk))
+
 
 
 

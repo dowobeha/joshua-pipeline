@@ -6,42 +6,33 @@ export .DEFAULT_GOAL=all
 ################################################################################
 
 
-################################################################################
-####                      Define a helper function:                         ####
-####                                                                        ####
-#### Define a function to import another make file 
-####      only if it has not already been imported.
-####                                                                        ####
-#### To use, add this line:
-####         $(eval $(call import,/path/to/other.mk))
-#### instead of using the traditional
-####         include /path/to/other.mk
-define import
-ifndef $1
-$1:=$1
-include $1
-endif
-endef
-####                                                                        ####
-################################################################################
-
-
 EXPERIMENT_DIR:=/mnt/data/wmt10.cz
 EXPERIMENT_MAKE_DIR:=${EXPERIMENT_DIR}/000.makefiles
 DOWNLOAD_DIR:=${EXPERIMENT_DIR}/001.OriginalData
 UNZIPPED_DATA_DIR:=${EXPERIMENT_DIR}/002.OriginalDataUnzipped
-DATA_DIR:=${EXPERIMENT_DIR}/002.OriginalData
-#TOY_SIZE:=10000
 CZEN_USERNAME:=fdf0c1
 CZENG_SCRIPT:=${EXPERIMENT_MAKE_DIR}/scripts/prepare-czeng.perl
-
-
 JOSHUA:=${EXPERIMENT_DIR}/003.Joshua
 SRILM:=/home/zli/tools/srilm1.5.7.64bit.pic
 
 BERKELEYALIGNER:=${EXPERIMENT_DIR}/004.BerkeleyAligner
 
 WMT10_SCRIPTS:=${EXPERIMENT_DIR}/005.Scripts
+
+# Subsampling
+SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
+FILTER_SCRIPT:=${EXPERIMENT_MAKE_DIR}/scripts/filter-sentences.pl
+
+
+ifeq (${TOY},true)
+EXPERIMENT_DIR:=/mnt/data/wmt10.cz.toy
+ifndef TOY_SIZE
+TOY_SIZE:=10000
+endif
+endif
+
+DATA_DIR:=${EXPERIMENT_DIR}/002.OriginalData
+
 
 DATA_WITHOUT_XML:=${EXPERIMENT_DIR}/006.RemoveXML
 
@@ -80,3 +71,13 @@ TOKENIZED_FILES:=$(patsubst ${DATA_WITHOUT_XML}/%,${TOKENIZED_DATA}/%,$(wildcard
 NORMALIZED_DATA:=${EXPERIMENT_DIR}/008.NormalizedData
 NORMALIZED_FILES:=$(patsubst ${TOKENIZED_DATA}/%,${NORMALIZED_DATA}/%,$(wildcard ${TOKENIZED_DATA}/*))
 
+
+
+BERKELEY_NUM_THREADS:=10
+BERKELEY_JVM_FLAGS:=-d64 -Dfile.encoding=utf8 -XX:MinHeapFreeRatio=10 -Xms25g -Xmx25g
+
+EXTRACT_RULES_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
+HIERO_DIR:=/home/zli/work/hiero/copy_2008/sa_copy/sa-hiero_adapted
+SRILM_NGRAM_COUNT:=${SRILM}/bin/i686-m64/ngram-count
+LM_TRAINING_DIR=${NORMALIZED_DATA}
+LM_NGRAM_ORDER:=5
