@@ -11,23 +11,25 @@ THIS.MAKEFILE.NAME:=$(basename $(notdir $(lastword ${MAKEFILE_LIST})))
 
 
 # Start initializing this variable
-EXTRACT_RULES_DIR:=${THIS.MAKEFILE.NAME}
+JOSHUA_TRANSLATION_DIR:=${THIS.MAKEFILE.NAME}
 
 # Define how to import other make files
 include ${PATH.TO.THIS.MAKEFILE}/import.mk
 
 # Import common variables
-$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/011.BerkeleyAlign.cz-en.run1.mk))
+$(eval $(call import,${PATH.TO.THIS.MAKEFILE}/014.MERT.cz-en.bleu.run1.mk))
+
 
 # Finish initializing this variable
-EXTRACT_RULES_DIR:=${EXPERIMENT_DIR}/${EXTRACT_RULES_DIR}
+JOSHUA_TRANSLATION_DIR:=${EXPERIMENT_DIR}/${JOSHUA_TRANSLATION_DIR}
+
 
 ################################################################################
 ####                                                                        ####
 ####                   Download and install software                        ####
 
-$(eval $(call import,${EXPERIMENT_MAKE_DIR}/train/extract-grammar-hiero.mk))
-$(eval $(call EXTRACT_GRAMMAR_HIERO,${EXTRACT_RULES_DIR},${SRC},${TGT},${BERKELEY_ALIGN_DIR},${SUBSAMPLED_DATA},${HIERO_DIR}))
+$(eval $(call import,${EXPERIMENT_MAKE_DIR}/test/decode.mk))
+$(eval $(call RUN_JOSHUA,${JOSHUA_TRANSLATION_DIR},${JOSHUA},${JOSHUA_MEMORY_FLAGS},${JOSHUA_DEV_FILE_TO_TRANSLATE},${JOSHUA_DEV_NBEST_OUTPUT_FILENAME},${MERT_RESULT_CONFIG},))
 
 ####                                                                        ####
 ####         ... done downloading and installing software                   ####

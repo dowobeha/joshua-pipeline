@@ -119,3 +119,15 @@ MERT_NUM_REFERENCES:=1
 JOSHUA_MAX_N_ITEMS:=300
 JOSHUA_THREADS:=20
 MERT_JVM_FLAGS:=-d64 -Dfile.encoding=utf8 -Xms2g -Xmx2g -Dfile.encoding=utf8
+
+define JOSHUA_DEV_FILE_TO_TRANSLATE
+$(if ${SRC},${NORMALIZED_DATA}/newstest2009-src.${SRC},$(error SRC language is not defined))
+endef
+
+define JOSHUA_DEV_NBEST_OUTPUT_FILENAME
+$(if ${TGT},newstest2009.nbest.${TGT},$(error TGT language is not defined))
+endef
+
+define MERT_RESULT_CONFIG
+$(if ${MERT_DIR},${MERT_DIR}/joshua.config.ZMERT.final,$(error MERT_DIR is not defined))
+endef
