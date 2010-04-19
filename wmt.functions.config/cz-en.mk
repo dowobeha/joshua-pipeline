@@ -20,3 +20,5 @@ all:
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/015.Translate.cz-en.run1.mk
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/016.ExtractTopCand.cz-en.run1.mk
 	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/017.ExtractMBRCand.cz-en.run1.mk
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/018.RecaseSRILM.en.run1.mk
+	$(MAKE) -f ${PATH.TO.THIS.MAKEFILE}/019.PerformRecaseSRILM.cz-en.run1.mk

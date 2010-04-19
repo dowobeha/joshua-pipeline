@@ -1,7 +1,7 @@
 ################################################################################
 ####                     Define the target to be run:                       ####
 ####                                                                        ####
-export .DEFAULT_GOAL=all
+.DEFAULT_GOAL=all
 ####                                                                        ####
 ################################################################################
 
@@ -23,16 +23,23 @@ WMT10_SCRIPTS:=${EXPERIMENT_DIR}/005.Scripts
 SUBSAMPLER_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 FILTER_SCRIPT:=${EXPERIMENT_MAKE_DIR}/scripts/filter-sentences.pl
 
+RECASE_STRIP_TAGS_SCRIPT:=${EXPERIMENT_MAKE_DIR}/scripts/strip-sent-tags.perl
+
+
+LM_NGRAM_ORDER:=5
 
 ifeq (${TOY},true)
 EXPERIMENT_DIR:=/mnt/data/wmt10.cz.toy
 TOY_TEST_SGM_SCRIPT:=${EXPERIMENT_MAKE_DIR}/scripts/partial-sgm.pl
+RECASE_LM_NGRAM_ORDER:=3
 ifndef TOY_SIZE
 TOY_SIZE:=10000
 endif
 ifndef TOY_TEST_SIZE
 TOY_TEST_SIZE:=20
 endif
+else
+RECASE_LM_NGRAM_ORDER:=${LM_NGRAM_ORDER}
 endif
 
 DATA_DIR:=${EXPERIMENT_DIR}/002.OriginalData
@@ -82,9 +89,11 @@ BERKELEY_JVM_FLAGS:=-d64 -Dfile.encoding=utf8 -XX:MinHeapFreeRatio=10 -Xms25g -X
 
 EXTRACT_RULES_JVM_FLAGS:=-Xms30g -Xmx30g -Dfile.encoding=utf8
 HIERO_DIR:=/home/zli/work/hiero/copy_2008/sa_copy/sa-hiero_adapted
-SRILM_NGRAM_COUNT:=${SRILM}/bin/i686-m64/ngram-count
+SRILM_ARCH:=i686-m64
+SRILM_NGRAM_COUNT:=${SRILM}/bin/${SRILM_ARCH}/ngram-count
+SRILM_DISAMBIG:=${SRILM}/bin/${SRILM_ARCH}/disambig
 LM_TRAINING_DIR=${NORMALIZED_DATA}
-LM_NGRAM_ORDER:=5
+
 
 define SUBSAMPLER_FILES_TO_TRANSLATE
 $(if ${SRC},newssyscomb2009-src.${SRC} news-test2008-src.${SRC} newstest2009-src.${SRC} newstest2010-src.${SRC},$(error SRC language is not defined))
@@ -153,3 +162,36 @@ endef
 define JOSHUA_EXTRACT_DEV_MBR_BEST_OUTPUT_FILENAME
 $(if ${TGT},newstest2009.mbr.${TGT},$(error TGT language is not defined))
 endef
+
+define RECASE_TRUECASE_POSSIBLE_TRAINING_FILE_NAMES
+$(if ${TGT},news-commentary10.${TGT} news.${TGT}.shuffled europarl-v5.${TGT} undoc.2000.en-fr.${TGT} undoc.2000.en-es.${TGT} giga-fren.release2.${TGT},$(error TGT is not defined))
+endef
+
+define RECASE_TRUECASE_TRAINING_DIR
+$(if ${TOKENIZED_DATA},${TOKENIZED_DATA},$(error TOKENIZED_DATA is not defined))
+endef
+
+define RECASE_TRUECASE_TRAINING_FILE_NAMES
+$(if ${RECASE_TRUECASE_TRAINING_DIR},\
+	$(wildcard \
+		$(foreach file,${RECASE_TRUECASE_POSSIBLE_TRAINING_FILE_NAMES},${RECASE_TRUECASE_TRAINING_DIR}/${file})\
+	),\
+	$(error RECASE_TRUECASE_TRAINING_DIR is not defined)\
+)
+endef
+
+TRUECASE_MAPPING_SCRIPT:=${EXPERIMENT_MAKE_DIR}/scripts/truecase-map.perl
+
+define RECASE_LANGUAGE_MODEL
+$(if ${RECASE_SRILM_DIR},,$(error RECASE_SRILM_DIR is not defined))\
+$(if ${TGT},,$(error TGT language is not defined))\
+${RECASE_SRILM_DIR}/${TGT}.lm
+endef
+
+define RECASE_MAP_FILE
+$(if ${RECASE_SRILM_DIR},,$(error RECASE_SRILM_DIR is not defined))\
+$(if ${TGT},,$(error TGT language is not defined))\
+${RECASE_SRILM_DIR}/truecase.${TGT}.map
+endef
+
+REMOVE_OOV_SCRIPT:=${EXPERIMENT_MAKE_DIR}/scripts/remove_OOV_tag.perl

@@ -29,7 +29,7 @@ JOSHUA_EXTRACT_MBR_BEST_DIR:=${EXPERIMENT_DIR}/${JOSHUA_EXTRACT_MBR_BEST_DIR}
 ####                   Download and install software                        ####
 
 $(eval $(call import,${EXPERIMENT_MAKE_DIR}/test/extract-mbr-cand.mk))
-$(eval $(call JOSHUA_EXTRACT_MBR_BEST,${JOSHUA_EXTRACT_MBR_BEST_DIR},${JOSHUA_EXTRACT_DEV_MBR_BEST_INPUT},${JOSHUA_EXTRACT_DEV_MBR_BEST_OUTPUT_FILENAME},${JOSHUA},${JOSHUA_EXTRACT_MBR_BEST_NUM_THREADS}))
+$(eval $(call JOSHUA_EXTRACT_MBR_BEST,${JOSHUA_EXTRACT_MBR_BEST_DIR},${JOSHUA_EXTRACT_DEV_MBR_BEST_INPUT},${JOSHUA_EXTRACT_DEV_MBR_BEST_OUTPUT_FILENAME},${JOSHUA},${REMOVE_OOV_SCRIPT},${JOSHUA_EXTRACT_MBR_BEST_NUM_THREADS}))
 
 ####                                                                        ####
 ####         ... done downloading and installing software                   ####
