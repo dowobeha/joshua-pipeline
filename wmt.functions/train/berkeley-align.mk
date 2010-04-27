@@ -32,7 +32,8 @@ $(if $7,,$(error Function $0: a required parameter $$7 (defining BERKELEY_JVM_FL
 all: $1/alignments/training.align
 
 # Run Berkeley aligner
-$1/alignments/training.$2 $1/alignments/training.$3 $1/alignments/training.align: $1/berkeley.aligner.config $4/subsampled/subsample.$2 $4/subsampled/subsample.$3
+.PRECIOUS: $1/alignments/%.$2 $1/alignments/%.$3 $1/alignments/%.align
+$1/alignments/%.$2 $1/alignments/%.$3 $1/alignments/%.align: $1/berkeley.aligner.config $4/subsampled/subsample.$2 $4/subsampled/subsample.$3
 	java $7 -jar $5/berkeleyaligner.jar ++$1/berkeley.aligner.config
 
 # Create directory

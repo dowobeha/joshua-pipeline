@@ -24,6 +24,8 @@ $1/bin/joshua.jar: $1/joshua-1.3.tgz | $1
 	tar -C $1 --touch --strip-components=1 -xvzf $$<
 	cd $1 && export SRILM=$2 && ant jar 
 
+$1/lib/commons-cli-2.0-SNAPSHOT.jar: $1/bin/joshua.jar
+
 # Download Joshua
 $1/joshua-1.3.tgz: | $1
 	wget --no-verbose -P $1 http://voxel.dl.sourceforge.net/sourceforge/joshua/joshua-1.3.tgz

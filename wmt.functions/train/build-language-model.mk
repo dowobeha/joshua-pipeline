@@ -18,13 +18,14 @@ $(if $3,,$(error Function $0: a required parameter $$3 (defining TGT) was omitte
 $(if $4,,$(error Function $0: a required parameter $$4 (defining LM_NGRAM_ORDER) was omitted))
 $(if $5,,$(error Function $0: a required parameter $$5 (defining LM_TRAINING_FILE_NAMES) was omitted))
 $(if $6,,$(error Function $0: a required parameter $$6 (defining LM_TRAINING_DIR) was omitted))
+$(if $7,,$(error Function $0: a required parameter $$7 (defining SRILM_NGRAM_COUNT_FLAGS) was omitted))
 
 # Convenient target
 all: $1/$3.lm
 
 # Build language model
 $1/$3.lm: $1/monolingual.$3 | $2 $1
-	$2 -order $4 -interpolate -kndiscount -text $$< -lm $$@
+	$2 -order $4 $7 -text $$< -lm $$@
 
 # Concatenate the monolingual training files
 $1/monolingual.$3: $$(call LM_TRAINING_FILES,$5,$6) $1/monolingual.$3.manifest | $1

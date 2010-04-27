@@ -41,6 +41,7 @@ $1/combined.test.$2: $(foreach file,$9,$1/test/${file}) | $1
 
 
 # Define target to remove training lines with zero words on at least one side and those with 100+ words on at least one side
+.PRECIOUS: $1/training/%.$2 $1/training/%.$3
 $1/training/%.$2 $1/training/%.$3: $5/%.$2 $5/%.$3 $6 | $1/training
 	$6 $5/$$*.$2 $5/$$*.$3 $1/training/$$*.$2 $1/training/$$*.$3
 
@@ -56,6 +57,7 @@ $1/manifest: | $1
 
 
 # Perform subsampling
+.PRECIOUS: $1/subsampled/%.$2 $1/subsampled/%.$3
 $1/subsampled/%.$2 $1/subsampled/%.$3: $(foreach file,$4,$1/training/${file}.$2 $1/training/${file}.$3) $1/manifest $1/combined.test.$2  | $7/bin/joshua.jar $7/lib/commons-cli-2.0-SNAPSHOT.jar $1/subsampled $1/training
 	java $8 -cp "$7/bin/joshua.jar:$7/lib/commons-cli-2.0-SNAPSHOT.jar" \
 		joshua.subsample.Subsampler \
